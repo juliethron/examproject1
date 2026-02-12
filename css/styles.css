@@ -23,7 +23,7 @@ body {
         rgba(18,20,23,0.85),
         rgba(18,20,23,0.95)
     ),
-        url("bilds/iron-lung-bg.avif");
+        url("../bilds/iron-lung-bg.avif");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
