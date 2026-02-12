@@ -41,11 +41,8 @@ async function fetchProducts() {
       customTitle: customTitles[index],
 
 
-      adjustedPrice: Math.max(
-        9.99,
-        product.discountedPrice * PRICE_MULTIPLIER
-      )
-    }));
+      adjustedPrice: generateRetailPrice()
+
 
     renderProducts(products);
 
@@ -123,6 +120,10 @@ if (cartBtn && cartPanel) {
   cartBtn.addEventListener("click", () => {
     cartPanel.classList.toggle("open");
   });
+}
+
+function generateRetailPrice() {
+  return (Math.random() * (24.99 - 9.99) + 9.99);
 }
 
 
