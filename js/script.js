@@ -6,6 +6,8 @@ const countEl = document.getElementById("count");
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
+const PRICE_MULTIPLIER = 0.08;
+
 let products = [];
 let cart = [];
 
@@ -36,7 +38,13 @@ async function fetchProducts() {
     products = json.data.slice(0, 6).map((product, index) => ({
       ...product,
       customImage: customImages[index],
-      customTitle: customTitles[index]
+      customTitle: customTitles[index],
+
+
+      adjustedPrice: Math.max(
+        9.99,
+        product.discountedPrice * PRICE_MULTIPLIER
+      )
     }));
 
     renderProducts(products);
@@ -66,7 +74,7 @@ function renderProducts(items) {
 
         <div class="price-cart">
           <div class="price">
-            £${product.discountedPrice.toFixed(2)}
+            £${product.adjustedPrice.toFixed(2)}
           </div>
 
           <button
@@ -105,7 +113,7 @@ function renderCart() {
   cartItems.innerHTML = cart.map(item => `
     <div class="cart-item">
       <span>${item.customTitle}</span>
-      <span>£${item.discountedPrice.toFixed(2)}</span>
+      <span>£${item.adjustedPrice.toFixed(2)}</span>
     </div>
   `).join("");
 }
