@@ -9,7 +9,6 @@ const API_URL = "https://v2.api.noroff.dev/online-shop";
 let products = [];
 let cart = [];
 
-/* ✅ ADD IMAGES HERE */
 const customImages = [
   "bilds/thething.jpg",
   "bilds/hereditary.jpg",
@@ -24,7 +23,7 @@ async function fetchProducts() {
     const response = await fetch(API_URL);
     const json = await response.json();
 
-    /* ✅ ATTACH IMAGES HERE */
+
     products = json.data.slice(0, 6).map((product, index) => ({
       ...product,
       customImage: customImages[index]
