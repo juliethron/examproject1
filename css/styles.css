@@ -130,13 +130,36 @@ header {
 }
 
 .primary {
+    display: inline-flex;              
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px 22px;               
+    border-radius: 999px;
+
     background: linear-gradient(
-    180deg,
-    #d4473b,
-    #b32f26
+        180deg,
+        #d4473b,
+        #b32f26
     );
+
     color: white;
+    text-decoration: none;             
+
+    font-weight: 600;
+    cursor: pointer;
+
+    border: none;
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease;
 }
+
+
+.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(196,58,47,0.35);
+}
+
 
 .ghost {
     background: transparent;
