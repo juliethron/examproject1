@@ -19,10 +19,9 @@ const customImages = [
 ];
 
 async function fetchProducts() {
-    try {
+  try {
     const response = await fetch(API_URL);
     const json = await response.json();
-
 
     products = json.data.slice(0, 6).map((product, index) => ({
       ...product,
@@ -30,35 +29,72 @@ async function fetchProducts() {
     }));
 
     renderProducts(products);
-    } catch (error) {
+
+  } catch (error) {
     console.error("Failed to fetch products:", error);
-    grid.innerHTML = "<p>UNABLE TO ACCESS INVENTORY</p>";
+    if (grid) {
+      grid.innerHTML = "<p>UNABLE TO ACCESS INVENTORY</p>";
     }
+  }
 }
 
 function renderProducts(items) {
-    grid.innerHTML = items.map(product => `
+  if (!grid) return;
+
+  grid.innerHTML = items.map(product => `
     <div class="card" onclick="openProduct('${product.id}')">
-        <div
+      <div
         class="poster"
         style="background-image:url('${product.customImage}')">
-        </div>
+      </div>
 
-        <div class="card-content">
+      <div class="card-content">
         <h3>${product.title}</h3>
         <span>${product.tags.join(" / ")}</span>
 
         <div class="price-cart">
-            <div class="price">
+          <div class="price">
             ${product.discountedPrice.toFixed(2)} CR
-            </div>
-            <button
+          </div>
+          <button
             class="add"
             onclick="event.stopPropagation(); addToCart('${product.id}')">
             LOAD
-            </button>
+          </button>
         </div>
-        </div>
+      </div>
     </div>
-    `).join("");
+  `).join("");
 }
+
+/* ✅ REQUIRED FUNCTIONS */
+
+function openProduct(id) {
+  window.location.href = `product.html?id=${id}`;
+}
+
+function addToCart(id) {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+
+  cart.push(product);
+
+  if (countEl) {
+    countEl.textContent = cart.length;
+  }
+
+  renderCart();
+}
+
+function renderCart() {
+  if (!cartItems) return;
+
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span>${item.title}</span>
+      <span>${item.discountedPrice.toFixed(2)} CR</span>
+    </div>
+  `).join("");
+}
+
+fetchProducts();
