@@ -9,7 +9,6 @@ const API_URL = "https://v2.api.noroff.dev/online-shop";
 let products = [];
 let cart = [];
 
-
 const customImages = [
   "bilds/thething.jpg",
   "bilds/hereditary.jpg",
@@ -18,7 +17,6 @@ const customImages = [
   "bilds/weapons.jpg",
   "bilds/halloween.jpg"
 ];
-
 
 const customTitles = [
   "THE THING",
@@ -29,11 +27,11 @@ const customTitles = [
   "HALLOWEEN"
 ];
 
+
 async function fetchProducts() {
   try {
     const response = await fetch(API_URL);
     const json = await response.json();
-
 
     products = json.data.slice(0, 6).map((product, index) => ({
       ...product,
@@ -52,6 +50,7 @@ async function fetchProducts() {
   }
 }
 
+
 function renderProducts(items) {
   if (!grid) return;
 
@@ -65,13 +64,9 @@ function renderProducts(items) {
       <div class="card-content">
         <h3>${product.customTitle}</h3>
 
-        <span>
-          ${product.description.slice(0, 60)}...
-        </span>
-
         <div class="price-cart">
           <div class="price">
-            ${product.discountedPrice.toFixed(2)} CR
+            £${product.discountedPrice.toFixed(2)}
           </div>
 
           <button
@@ -110,9 +105,16 @@ function renderCart() {
   cartItems.innerHTML = cart.map(item => `
     <div class="cart-item">
       <span>${item.customTitle}</span>
-      <span>${item.discountedPrice.toFixed(2)} CR</span>
+      <span>£${item.discountedPrice.toFixed(2)}</span>
     </div>
   `).join("");
+}
+
+
+if (cartBtn && cartPanel) {
+  cartBtn.addEventListener("click", () => {
+    cartPanel.classList.toggle("open");
+  });
 }
 
 
