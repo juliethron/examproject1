@@ -82,4 +82,12 @@ cartBtn.addEventListener("click", () => {
 });
 
 
+const browseBtn = document.getElementById("browseBtn");
+
+browseBtn.addEventListener("click", () => {
+  grid.scrollIntoView({ behavior: "smooth" });
+});
+
+
+
 fetchProducts();
