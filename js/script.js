@@ -6,8 +6,6 @@ const countEl = document.getElementById("count");
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-const PRICE_MULTIPLIER = 0.08;
-
 let products = [];
 let cart = [];
 
@@ -29,6 +27,10 @@ const customTitles = [
   "HALLOWEEN"
 ];
 
+function generateRetailPrice() {
+  return (Math.random() * (24.99 - 9.99) + 9.99);
+}
+
 
 async function fetchProducts() {
   try {
@@ -40,9 +42,8 @@ async function fetchProducts() {
       customImage: customImages[index],
       customTitle: customTitles[index],
 
-
       adjustedPrice: generateRetailPrice()
-
+    }));
 
     renderProducts(products);
 
@@ -120,10 +121,6 @@ if (cartBtn && cartPanel) {
   cartBtn.addEventListener("click", () => {
     cartPanel.classList.toggle("open");
   });
-}
-
-function generateRetailPrice() {
-  return (Math.random() * (24.99 - 9.99) + 9.99);
 }
 
 
