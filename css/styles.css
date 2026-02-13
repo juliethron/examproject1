@@ -92,6 +92,9 @@ header {
     font-family: Cinzel, serif;
     letter-spacing: 0.18em;
     font-size: 18px;
+
+    text-decoration: none;   
+    color: var(--ink);       
 }
 
 .nav button {
