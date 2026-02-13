@@ -4,26 +4,53 @@ const API_URL = "https://v2.api.noroff.dev/online-shop";
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 
+const customImages = [
+  "bilds/thething.jpg",
+  "bilds/hereditary.jpg",
+  "bilds/longlegs.jpg",
+  "bilds/suspiria.jpg",
+  "bilds/weapons.jpg",
+  "bilds/halloween.jpg"
+];
+
+const customTitles = [
+  "THE THING",
+  "HEREDITARY",
+  "LONGLEGS",
+  "SUSPIRIA",
+  "WEAPONS",
+  "HALLOWEEN"
+];
+
+function generateRetailPrice() {
+  return (Math.random() * (24.99 - 9.99) + 9.99);
+}
+
 async function fetchProduct(id) {
-    try {
+  try {
     const res = await fetch(`${API_URL}/${id}`);
     const json = await res.json();
     return json.data;
-    } catch (error) {
+
+  } catch (error) {
     console.error("Failed to load product", error);
     return null;
-    }
+  }
 }
 
 function renderProduct(product) {
-    if (!product) {
+  if (!container || !product) {
     container.innerHTML = "<p>PRODUCT FILE CORRUPTED</p>";
     return;
-    }
+  }
 
-    container.innerHTML = `
+  const index = Math.floor(Math.random() * customTitles.length);
+
+  const adjustedPrice = generateRetailPrice();
+
+  container.innerHTML = `
     <div class="product-image"
-        style="background-image:url('${product.image.url}')">
+        style="background-image:url('${customImages[index]}')">
     </div>
 
     <div class="product-meta">
@@ -31,29 +58,29 @@ function renderProduct(product) {
         FILE ID: ${product.id.slice(0, 8).toUpperCase()}
         </span>
 
-        <h1>${product.title}</h1>
+        <h1>${customTitles[index]}</h1>
 
         <p class="product-description">
         ${product.description}
         </p>
 
         <div class="product-price">
-        ${product.discountedPrice.toFixed(2)} CREDITS
+        £${adjustedPrice.toFixed(2)}
         </div>
 
         <div class="product-actions">
-        <button class="load">LOAD TO CARGO</button>
+        <button class="load">ADD TO CART</button>
         </div>
     </div>
-    `;
+  `;
 }
 
 (async () => {
-    if (!productId) {
+  if (!productId) {
     container.innerHTML = "<p>NO FILE SELECTED</p>";
     return;
-    }
+  }
 
-    const product = await fetchProduct(productId);
-    renderProduct(product);
+  const product = await fetchProduct(productId);
+  renderProduct(product);
 })();
