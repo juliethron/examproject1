@@ -8,7 +8,8 @@ const carouselTrack = document.getElementById("carouselTrack");
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
 let products = [];
-let cart = [];
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 
 function isLoggedIn() {
@@ -166,6 +167,7 @@ function renderProducts(items) {
   updateUIForAuth();
 }
 
+
 function updateUIForAuth() {
   const buttons = document.querySelectorAll(".add");
 
@@ -214,6 +216,7 @@ function addToCart(id) {
     });
   }
 
+  persistCart();     
   updateCartCount();
   renderCart();
 }
@@ -228,9 +231,16 @@ function changeQuantity(id, delta) {
     cart = cart.filter(p => p.id !== id);
   }
 
+  persistCart();     
   updateCartCount();
   renderCart();
 }
+
+
+function persistCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 
 function updateCartCount() {
   if (!countEl) return;
@@ -264,6 +274,31 @@ function renderCart() {
       </span>
     </div>
   `).join("");
+
+  updateCartTotal();   
+}
+
+
+function updateCartTotal() {
+  const totalEl = document.getElementById("cartTotal");
+  if (!totalEl) return;
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.finalPrice * item.quantity,
+    0
+  );
+
+  totalEl.textContent = `TOTAL — £${total.toFixed(2)}`;
+}
+
+
+function goToCheckout() {
+  if (!cart.length) {
+    alert("CART EMPTY");
+    return;
+  }
+
+  window.location.href = "checkout.html";
 }
 
 
@@ -275,4 +310,6 @@ if (cartBtn && cartPanel) {
 
 
 fetchProducts();
+updateCartCount();
+renderCart();
 updateUIForAuth();
