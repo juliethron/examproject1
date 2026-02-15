@@ -7,14 +7,9 @@ const carouselTrack = document.getElementById("carouselTrack");
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-const FORMAT_PRICING = {
-  dvd: 0,
-  bluray: 3,
-  fourk: 6
-};
-
 let products = [];
 let cart = [];
+
 
 const customImages = [
   "bilds/thething.jpg",
@@ -46,6 +41,7 @@ const customTitles = [
   "AUDITION"
 ];
 
+
 function generateRetailPrice() {
   return (Math.random() * (24.99 - 9.99) + 9.99);
 }
@@ -62,8 +58,7 @@ async function fetchProducts() {
       customImage: customImages[index % customImages.length],
       customTitle: customTitles[index % customTitles.length],
 
-      adjustedPrice: generateRetailPrice(),
-      format: "dvd"   
+      adjustedPrice: generateRetailPrice()
     }));
 
     renderCarousel(products);
@@ -107,21 +102,11 @@ function startCarousel() {
 
   setInterval(() => {
     slides[current].classList.remove("active");
+
     current = (current + 1) % slides.length;
+
     slides[current].classList.add("active");
   }, 3500);
-}
-
-
-function selectFormat(e, id, format) {
-  e.stopPropagation();
-
-  const product = products.find(p => p.id === id);
-  if (!product) return;
-
-  product.format = format;
-
-  renderProducts(products);  
 }
 
 
@@ -138,15 +123,9 @@ function renderProducts(items) {
       <div class="card-content">
         <h3>${product.customTitle}</h3>
 
-        <div class="formats">
-          <button onclick="selectFormat(event, '${product.id}', 'dvd')">DVD</button>
-          <button onclick="selectFormat(event, '${product.id}', 'bluray')">Blu-ray</button>
-          <button onclick="selectFormat(event, '${product.id}', 'fourk')">4K</button>
-        </div>
-
         <div class="price-cart">
           <div class="price">
-            £${(product.adjustedPrice + FORMAT_PRICING[product.format]).toFixed(2)}
+            £${product.adjustedPrice.toFixed(2)}
           </div>
 
           <button
@@ -159,7 +138,6 @@ function renderProducts(items) {
     </div>
   `).join("");
 }
-
 
 function handleAddToCart(e, id) {
   e.stopPropagation();
@@ -176,27 +154,67 @@ function addToCart(id) {
   const product = products.find(p => p.id === id);
   if (!product) return;
 
-  const finalPrice = product.adjustedPrice + FORMAT_PRICING[product.format];
+  const existingItem = cart.find(item => item.id === id);
 
-  cart.push({
-    ...product,
-    finalPrice
-  });
-
-  if (countEl) {
-    countEl.textContent = cart.length;
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({
+      id: product.id,
+      customTitle: product.customTitle,
+      finalPrice: product.adjustedPrice,
+      quantity: 1
+    });
   }
 
+  updateCartCount();
   renderCart();
 }
+
+function changeQuantity(id, delta) {
+  const item = cart.find(p => p.id === id);
+  if (!item) return;
+
+  item.quantity += delta;
+
+  if (item.quantity <= 0) {
+    cart = cart.filter(p => p.id !== id);
+  }
+
+  updateCartCount();
+  renderCart();
+}
+
+function updateCartCount() {
+  if (!countEl) return;
+
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  countEl.textContent = totalItems;
+}
+
 
 function renderCart() {
   if (!cartItems) return;
 
   cartItems.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <span>${item.customTitle} (${item.format.toUpperCase()})</span>
-      <span>£${item.finalPrice.toFixed(2)}</span>
+      <div>
+        <strong>${item.customTitle}</strong>
+
+        <div class="qty-controls">
+          <button onclick="changeQuantity('${item.id}', -1)">–</button>
+          <span>${item.quantity}</span>
+          <button onclick="changeQuantity('${item.id}', 1)">+</button>
+        </div>
+      </div>
+
+      <span>
+        £${(item.finalPrice * item.quantity).toFixed(2)}
+      </span>
     </div>
   `).join("");
 }
