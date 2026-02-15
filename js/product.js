@@ -10,12 +10,12 @@ const customImages = [
   "bilds/longlegs.jpg",
   "bilds/suspiria.jpg",
   "bilds/weapons.jpg",
-  "bilds/halloween.jpg"
-  "bilds/theshining.jpg"
-  "bilds/malignant.jpg"
-  "bilds/censor.jpg"
-  "bilds/saw.jpg"
-  "bilds/thedescent.jpg"
+  "bilds/halloween.jpg",
+  "bilds/theshining.jpg",
+  "bilds/malignant.jpg",
+  "bilds/censor.jpg",
+  "bilds/saw.jpg",
+  "bilds/thedescent.jpg",
   "bilds/audition.jpg"
 ];
 
@@ -26,11 +26,11 @@ const customTitles = [
   "SUSPIRIA",
   "WEAPONS",
   "HALLOWEEN",
-  "THE SHINING",
+  "THE SHINING",
   "MALIGNANT",
   "CENSOR",
   "SAW",
-  "THE DESCENT",
+  "THE DESCENT",
   "AUDITION"
 ];
 
