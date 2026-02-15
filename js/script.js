@@ -101,9 +101,13 @@ function renderCarousel(items) {
   const featured = items.slice(0, 3);
 
   carouselTrack.innerHTML = featured.map((product, index) => `
-    <div class="carousel-slide ${index === 0 ? "active" : ""}"
-      style="background-image:url('${product.customImage}')"
-      onclick="openProduct('${product.id}')">
+  <div 
+    class="carousel-slide ${index === 0 ? "active" : ""}"
+    style="background-image:url('${product.customImage}')"
+    aria-label="Featured product ${product.customTitle}"
+    role="img"
+    onclick="openProduct('${product.id}')">
+
 
       <div class="carousel-overlay">
         <h2>${product.customTitle}</h2>
