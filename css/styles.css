@@ -324,11 +324,16 @@ header {
 
 
 
-@media (max-width: 900px) {
-    .hero {
-    margin-top: 48px;
-    }
+@media (max-width: 600px) {
+  .card {
+    font-size: 14px;
+  }
+  .price-cart {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
+
 
 
 
