@@ -477,57 +477,82 @@ header {
 }
 
 
+
 .carousel {
-    max-width: 1200px;
-    margin: 40px auto 10px;
-    padding: 0 24px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px;
 }
 
 .carousel-track {
-    position: relative;
-    height: 260px;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
+  position: relative;
+  height: 320px;              
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.08);
 }
+
 
 .carousel-slide {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 
-    background-size: cover;
-    background-position: center;
+  background-size: cover;
+  background-position: center;
 
-    opacity: 0;
-    transform: scale(1.02);
-    transition: opacity 0.6s ease,
-                transform 1.2s ease;
+  opacity: 0;
+  transform: scale(1.05);     
+  transition: opacity 0.8s ease, transform 1.2s ease;
+
+  cursor: pointer;
 }
+
 
 .carousel-slide.active {
-    opacity: 1;
-    transform: scale(1);
+  opacity: 1;
+  transform: scale(1);
 }
+
 
 .carousel-overlay {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 
-    background: linear-gradient(
-        180deg,
-        rgba(0,0,0,0.15),
-        rgba(0,0,0,0.65)
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.2),
+    rgba(0,0,0,0.75)
+  );
 
-    display: flex;
-    align-items: flex-end;
-    padding: 24px;
+  display: flex;
+  align-items: flex-end;
+  padding: 28px;
 }
 
+
 .carousel-overlay h2 {
-    margin: 0;
-    font-family: Cinzel, serif;
-    letter-spacing: 0.08em;
+  font-family: Cinzel, serif;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.carousel-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02),
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+
+  opacity: 0.15;
+  pointer-events: none;
 }
 
 
