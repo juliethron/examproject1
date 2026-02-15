@@ -5,7 +5,6 @@ const cartItems = document.getElementById("cartItems");
 const countEl = document.getElementById("count");
 const carouselTrack = document.getElementById("carouselTrack");
 
-
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
 let products = [];
@@ -17,12 +16,12 @@ const customImages = [
   "bilds/longlegs.jpg",
   "bilds/suspiria.jpg",
   "bilds/weapons.jpg",
-  "bilds/halloween.jpg"
-  "bilds/theshining.jpg"
-  "bilds/malignant.jpg"
-  "bilds/censor.jpg"
-  "bilds/saw.jpg"
-  "bilds/thedescent.jpg"
+  "bilds/halloween.jpg",
+  "bilds/theshining.jpg",
+  "bilds/malignant.jpg",
+  "bilds/censor.jpg",
+  "bilds/saw.jpg",
+  "bilds/thedescent.jpg",
   "bilds/audition.jpg"
 ];
 
@@ -33,11 +32,11 @@ const customTitles = [
   "SUSPIRIA",
   "WEAPONS",
   "HALLOWEEN",
-  "THE SHINING",
+  "THE SHINING",
   "MALIGNANT",
   "CENSOR",
   "SAW",
-  "THE DESCENT",
+  "THE DESCENT",
   "AUDITION"
 ];
 
@@ -53,18 +52,27 @@ async function fetchProducts() {
 
     products = json.data.slice(0, 12).map((product, index) => ({
       ...product,
+
       customImage: customImages[index % customImages.length],
       customTitle: customTitles[index % customTitles.length],
-
 
       adjustedPrice: generateRetailPrice()
     }));
 
-   renderCarousel(products);
-renderProducts(products);
+    renderCarousel(products);
+    renderProducts(products);
+
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+
+    if (grid) {
+      grid.innerHTML = "<p>UNABLE TO ACCESS INVENTORY</p>";
+    }
+  }
+}
 
 
-  function renderCarousel(items) {
+function renderCarousel(items) {
   if (!carouselTrack) return;
 
   const featured = items.slice(0, 3);
@@ -83,7 +91,7 @@ renderProducts(products);
   startCarousel();
 }
 
-    function startCarousel() {
+function startCarousel() {
   const slides = document.querySelectorAll(".carousel-slide");
 
   if (!slides.length) return;
@@ -97,16 +105,6 @@ renderProducts(products);
 
     slides[current].classList.add("active");
   }, 3500);
-}
-
-
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-
-    if (grid) {
-      grid.innerHTML = "<p>UNABLE TO ACCESS INVENTORY</p>";
-    }
-  }
 }
 
 
