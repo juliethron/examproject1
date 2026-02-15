@@ -3,50 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disc of the Dead</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Cinzel&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+  <title>Disc of the Dead — Checkout</title>
+
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <header>
   <div class="nav">
-   <a href="index.html" class="logo">
-  Disc of the Dead
-</a>
+    <a href="index.html" class="logo">Disc of the Dead</a>
 
-
-   <nav class="nav-links">
-    <a href="shop.html">SHOP</a>
-    <a href="about.html">ABOUT</a>
-    <a href="cart.html">CART</a>
-    <a href="account.html">ACCOUNT</a>
-  </nav>
+    <nav class="nav-links">
+      <a href="shop.html">SHOP</a>
+      <a href="cart.html">CART</a>
+    </nav>
   </div>
 </header>
 
 <main class="product-page">
   <div class="product-wrapper">
+
     <div class="product-meta">
       <h1>CHECKOUT</h1>
 
-      
-      <p class="product-description">
-        Automated payment systems are currently unavailable.
-        This interface exists for structural demonstration purposes only.
-      </p>
+      <div id="cartItems"></div>
+      <div class="product-price" id="cartTotal"></div>
 
-      <div class="product-price">
-        TOTAL: CALCULATING…
+      <div class="checkout-form">
+        <input type="text" placeholder="Cardholder Name">
+        <input type="text" placeholder="Card Number">
+        <input type="text" placeholder="Expiry Date">
+        <input type="text" placeholder="Security Code">
       </div>
 
+      <div class="product-actions">
+        <button onclick="completeOrder()" class="load">
+          COMPLETE PURCHASE
+        </button>
+      </div>
 
-     
-      </p>
     </div>
+
   </div>
 </main>
 
+<script src="js/script.js"></script>
 </body>
 </html>
