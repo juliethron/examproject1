@@ -154,8 +154,10 @@ function renderProducts(items) {
           </div>
 
           <button
-            class="add"
-            onclick="handleAddToCart(event, '${product.id}')">
+            <button 
+          class="add"
+        aria-label="Add ${product.customTitle} to cart"
+  onclick="handleAddToCart(event, '${product.id}')">
             ADD TO CART
           </button>
         </div>
