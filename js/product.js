@@ -11,6 +11,12 @@ const customImages = [
   "bilds/suspiria.jpg",
   "bilds/weapons.jpg",
   "bilds/halloween.jpg"
+  "bilds/theshining.jpg"
+  "bilds/malignant.jpg"
+  "bilds/censor.jpg"
+  "bilds/saw.jpg"
+  "bilds/thedescent.jpg"
+  "bilds/audition.jpg"
 ];
 
 const customTitles = [
@@ -19,7 +25,13 @@ const customTitles = [
   "LONGLEGS",
   "SUSPIRIA",
   "WEAPONS",
-  "HALLOWEEN"
+  "HALLOWEEN",
+  "THE SHINING",
+  "MALIGNANT",
+  "CENSOR",
+  "SAW",
+  "THE DESCENT",
+  "AUDITION"
 ];
 
 function generateRetailPrice() {
