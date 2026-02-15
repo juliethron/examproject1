@@ -11,6 +11,21 @@ let products = [];
 let cart = [];
 
 
+function isLoggedIn() {
+  return localStorage.getItem("loggedIn") === "true";
+}
+
+function login() {
+  localStorage.setItem("loggedIn", "true");
+  updateUIForAuth();
+}
+
+function logout() {
+  localStorage.setItem("loggedIn", "false");
+  updateUIForAuth();
+}
+
+
 const customImages = [
   "bilds/thething.jpg",
   "bilds/hereditary.jpg",
@@ -52,16 +67,20 @@ async function fetchProducts() {
     const response = await fetch(API_URL);
     const json = await response.json();
 
-    products = json.data.slice(0, 12).map((product, index) => ({
-      ...product,
+    products = json.data.slice(0, 12).map((product, index) => {
 
-      customImage: customImages[index % customImages.length],
-      customTitle: customTitles[index % customTitles.length],
+      const basePrice = generateRetailPrice();
 
-      adjustedPrice: generateRetailPrice(),
-      originalPrice: generateRetailPrice() + 8
+      return {
+        ...product,
 
-    }));
+        customImage: customImages[index % customImages.length],
+        customTitle: customTitles[index % customTitles.length],
+
+        adjustedPrice: basePrice,
+        originalPrice: basePrice + 8
+      };
+    });
 
     renderCarousel(products);
     renderProducts(products);
@@ -104,9 +123,7 @@ function startCarousel() {
 
   setInterval(() => {
     slides[current].classList.remove("active");
-
     current = (current + 1) % slides.length;
-
     slides[current].classList.add("active");
   }, 3500);
 }
@@ -127,7 +144,13 @@ function renderProducts(items) {
 
         <div class="price-cart">
           <div class="price">
-            £${product.adjustedPrice.toFixed(2)}
+            <span class="old">
+              £${product.originalPrice.toFixed(2)}
+            </span>
+
+            <span class="new">
+              £${product.adjustedPrice.toFixed(2)}
+            </span>
           </div>
 
           <button
@@ -139,10 +162,32 @@ function renderProducts(items) {
       </div>
     </div>
   `).join("");
+
+  updateUIForAuth();
+}
+
+function updateUIForAuth() {
+  const buttons = document.querySelectorAll(".add");
+
+  buttons.forEach(button => {
+    if (!isLoggedIn()) {
+      button.textContent = "LOGIN TO PURCHASE";
+      button.style.opacity = "0.6";
+    } else {
+      button.textContent = "ADD TO CART";
+      button.style.opacity = "1";
+    }
+  });
 }
 
 function handleAddToCart(e, id) {
   e.stopPropagation();
+
+  if (!isLoggedIn()) {
+    alert("ACCESS DENIED — LOGIN REQUIRED");
+    return;
+  }
+
   addToCart(id);
 }
 
@@ -230,3 +275,4 @@ if (cartBtn && cartPanel) {
 
 
 fetchProducts();
+updateUIForAuth();
