@@ -128,13 +128,19 @@ function renderProducts(items) {
 
           <button
             class="add"
-            onclick="event.stopPropagation(); addToCart('${product.id}')">
-            ADD TO CART
-          </button>
+            onclick="handleAddToCart(event, '${product.id}')">
+          ADD TO CART
+    </button>
+
         </div>
       </div>
     </div>
   `).join("");
+}
+
+function handleAddToCart(e, id) {
+  e.stopPropagation();
+  addToCart(id);
 }
 
 
