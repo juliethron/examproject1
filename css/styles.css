@@ -661,3 +661,13 @@ header {
   fill: var(--ink);
 }
 
+
+:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
