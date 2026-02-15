@@ -39,8 +39,9 @@ async function fetchProducts() {
 
     products = json.data.slice(0, 12).map((product, index) => ({
       ...product,
-      customImage: customImages[index],
-      customTitle: customTitles[index],
+      customImage: customImages[index % customImages.length],
+      customTitle: customTitles[index % customTitles.length],
+
 
       adjustedPrice: generateRetailPrice()
     }));
