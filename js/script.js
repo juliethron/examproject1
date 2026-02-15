@@ -7,6 +7,12 @@ const carouselTrack = document.getElementById("carouselTrack");
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
+const FORMAT_PRICING = {
+  dvd: 0,
+  bluray: 3,
+  fourk: 6
+};
+
 let products = [];
 let cart = [];
 
@@ -56,7 +62,8 @@ async function fetchProducts() {
       customImage: customImages[index % customImages.length],
       customTitle: customTitles[index % customTitles.length],
 
-      adjustedPrice: generateRetailPrice()
+      adjustedPrice: generateRetailPrice(),
+      format: "dvd"   
     }));
 
     renderCarousel(products);
@@ -100,11 +107,21 @@ function startCarousel() {
 
   setInterval(() => {
     slides[current].classList.remove("active");
-
     current = (current + 1) % slides.length;
-
     slides[current].classList.add("active");
   }, 3500);
+}
+
+
+function selectFormat(e, id, format) {
+  e.stopPropagation();
+
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+
+  product.format = format;
+
+  renderProducts(products);  
 }
 
 
@@ -121,22 +138,28 @@ function renderProducts(items) {
       <div class="card-content">
         <h3>${product.customTitle}</h3>
 
+        <div class="formats">
+          <button onclick="selectFormat(event, '${product.id}', 'dvd')">DVD</button>
+          <button onclick="selectFormat(event, '${product.id}', 'bluray')">Blu-ray</button>
+          <button onclick="selectFormat(event, '${product.id}', 'fourk')">4K</button>
+        </div>
+
         <div class="price-cart">
           <div class="price">
-            £${product.adjustedPrice.toFixed(2)}
+            £${(product.adjustedPrice + FORMAT_PRICING[product.format]).toFixed(2)}
           </div>
 
           <button
             class="add"
             onclick="handleAddToCart(event, '${product.id}')">
-          ADD TO CART
-    </button>
-
+            ADD TO CART
+          </button>
         </div>
       </div>
     </div>
   `).join("");
 }
+
 
 function handleAddToCart(e, id) {
   e.stopPropagation();
@@ -153,7 +176,12 @@ function addToCart(id) {
   const product = products.find(p => p.id === id);
   if (!product) return;
 
-  cart.push(product);
+  const finalPrice = product.adjustedPrice + FORMAT_PRICING[product.format];
+
+  cart.push({
+    ...product,
+    finalPrice
+  });
 
   if (countEl) {
     countEl.textContent = cart.length;
@@ -167,8 +195,8 @@ function renderCart() {
 
   cartItems.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <span>${item.customTitle}</span>
-      <span>£${item.adjustedPrice.toFixed(2)}</span>
+      <span>${item.customTitle} (${item.format.toUpperCase()})</span>
+      <span>£${item.finalPrice.toFixed(2)}</span>
     </div>
   `).join("");
 }
