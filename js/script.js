@@ -58,7 +58,9 @@ async function fetchProducts() {
       customImage: customImages[index % customImages.length],
       customTitle: customTitles[index % customTitles.length],
 
-      adjustedPrice: generateRetailPrice()
+      adjustedPrice: generateRetailPrice(),
+      originalPrice: generateRetailPrice() + 8
+
     }));
 
     renderCarousel(products);
