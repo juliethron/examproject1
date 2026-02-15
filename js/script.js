@@ -171,24 +171,14 @@ function updateUIForAuth() {
   const buttons = document.querySelectorAll(".add");
 
   buttons.forEach(button => {
-    if (!isLoggedIn()) {
-      button.textContent = "LOGIN TO PURCHASE";
-      button.style.opacity = "0.6";
-    } else {
-      button.textContent = "ADD TO CART";
-      button.style.opacity = "1";
-    }
+    button.textContent = "ADD TO CART";
+    button.style.opacity = "1";
   });
 }
 
+
 function handleAddToCart(e, id) {
   e.stopPropagation();
-
-  if (!isLoggedIn()) {
-    alert("ACCESS DENIED — LOGIN REQUIRED");
-    return;
-  }
-
   addToCart(id);
 }
 
