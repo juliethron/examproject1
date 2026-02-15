@@ -458,8 +458,6 @@ header {
 }
 
 
-/* ================= CAROUSEL ================= */
-
 .carousel {
     max-width: 1200px;
     margin: 40px auto 10px;
@@ -512,3 +510,27 @@ header {
     font-family: Cinzel, serif;
     letter-spacing: 0.08em;
 }
+
+
+
+.qty-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.qty-controls button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.qty-controls button:hover {
+  border-color: var(--accent);
+}
+
