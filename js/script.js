@@ -3,6 +3,8 @@ const cartBtn = document.getElementById("cartBtn");
 const cartPanel = document.getElementById("cartPanel");
 const cartItems = document.getElementById("cartItems");
 const countEl = document.getElementById("count");
+const carouselTrack = document.getElementById("carouselTrack");
+
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
@@ -46,7 +48,45 @@ async function fetchProducts() {
       adjustedPrice: generateRetailPrice()
     }));
 
-    renderProducts(products);
+   renderCarousel(products);
+renderProducts(products);
+
+
+  function renderCarousel(items) {
+  if (!carouselTrack) return;
+
+  const featured = items.slice(0, 3);
+
+  carouselTrack.innerHTML = featured.map((product, index) => `
+    <div class="carousel-slide ${index === 0 ? "active" : ""}"
+      style="background-image:url('${product.customImage}')"
+      onclick="openProduct('${product.id}')">
+
+      <div class="carousel-overlay">
+        <h2>${product.customTitle}</h2>
+      </div>
+    </div>
+  `).join("");
+
+  startCarousel();
+}
+
+    function startCarousel() {
+  const slides = document.querySelectorAll(".carousel-slide");
+
+  if (!slides.length) return;
+
+  let current = 0;
+
+  setInterval(() => {
+    slides[current].classList.remove("active");
+
+    current = (current + 1) % slides.length;
+
+    slides[current].classList.add("active");
+  }, 3500);
+}
+
 
   } catch (error) {
     console.error("Failed to fetch products:", error);
