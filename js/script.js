@@ -37,7 +37,7 @@ async function fetchProducts() {
     const response = await fetch(API_URL);
     const json = await response.json();
 
-    products = json.data.slice(0, 6).map((product, index) => ({
+    products = json.data.slice(0, 12).map((product, index) => ({
       ...product,
       customImage: customImages[index],
       customTitle: customTitles[index],
