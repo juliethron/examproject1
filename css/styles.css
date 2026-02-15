@@ -251,6 +251,25 @@ header {
     align-items: center;
 }
 
+.price {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.price .old {
+  text-decoration: line-through;
+  color: var(--muted);
+  opacity: 0.6;
+  font-size: 13px;
+}
+
+.price .new {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+
 .add {
     background: rgba(196,58,47,0.2);
     border: 1px solid rgba(196,58,47,0.5);
