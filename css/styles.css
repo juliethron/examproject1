@@ -672,3 +672,27 @@ header {
   outline: none;
 }
 
+
+.featured {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+.featured .section-label {
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  opacity: 0.6;
+}
+
+
+.carousel-track {
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.carousel-track:hover {
+  transform: scale(1.03);
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+}
+
