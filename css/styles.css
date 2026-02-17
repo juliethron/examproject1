@@ -489,14 +489,17 @@ header {
   padding: 0 24px;
 }
 
+
 .carousel-track {
   position: relative;
-  height: 320px;              
+  width: 240px;          
+  height: 360px;         
+  margin: 0 0 0 auto;       
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  border: 1px solid rgba(255,255,255,0.08);
 }
+
 
 
 .carousel-slide {
