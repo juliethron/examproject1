@@ -497,27 +497,22 @@ header {
 
 .carousel-track {
   position: relative;
-  width: 240px;          
-  height: 360px;         
-  margin: 0 0 0 auto;       
+  width: 300px;      
+  height: 450px;    
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
 }
 
 
-
 .carousel-slide {
   position: absolute;
   inset: 0;
-
   background-size: cover;
   background-position: center;
-
   opacity: 0;
   transform: scale(1.05);     
   transition: opacity 0.8s ease, transform 1.2s ease;
-
   cursor: pointer;
 }
 
@@ -531,13 +526,11 @@ header {
 .carousel-overlay {
   position: absolute;
   inset: 0;
-
   background: linear-gradient(
     180deg,
     rgba(0,0,0,0.2),
     rgba(0,0,0,0.75)
   );
-
   display: flex;
   align-items: flex-end;
   padding: 28px;
