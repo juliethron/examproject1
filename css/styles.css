@@ -108,13 +108,18 @@ header {
 
 
 .hero {
-    max-width: 1200px;
-    margin: 80px auto 40px;
-    padding: 0 24px;
-    display: grid;                     
-    grid-template-columns: 1fr auto;   
-    gap: 60px;
-    align-items: center;
+  max-width: 1200px;
+  margin: 80px auto 40px;
+  padding: 0 24px;
+
+  display: grid;
+  grid-template-columns: 1fr 320px;   
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-text {
+  max-width: 520px;
 }
 
 
@@ -676,8 +681,9 @@ header {
 .featured {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
+
 
 
 .featured .section-label {
