@@ -111,7 +111,12 @@ header {
     max-width: 1200px;
     margin: 80px auto 40px;
     padding: 0 24px;
+    display: grid;                     
+    grid-template-columns: 1fr auto;   
+    gap: 60px;
+    align-items: center;
 }
+
 
 .hero h1 {
     font-family: Cinzel, serif;
