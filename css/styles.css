@@ -705,3 +705,83 @@ header {
   box-shadow: 0 25px 80px rgba(0,0,0,0.6);
 }
 
+
+
+.account-page {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 0 24px;
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  align-items: center;
+}
+
+
+.account-form h1 {
+  font-family: Cinzel, serif;
+  font-size: 42px;
+  letter-spacing: 0.08em;
+  margin-bottom: 32px;
+}
+
+.account-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+.account-form input {
+  background: rgba(255,255,255,0.9);
+  border: none;
+  padding: 12px 14px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+.account-form input::placeholder {
+  font-style: italic;
+  color: #555;
+}
+
+
+.forgot {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-top: -6px;
+}
+
+.forgot:hover {
+  color: var(--ink);
+}
+
+
+.account-action {
+  display: flex;
+  justify-content: center;
+}
+
+.account-action .primary {
+  padding: 16px 46px;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+}
+
+
+@media (max-width: 900px) {
+
+  .account-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .account-action {
+    justify-content: flex-start;
+  }
+}
+
