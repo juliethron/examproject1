@@ -792,3 +792,34 @@ header {
   text-decoration: none;
 }
 
+
+.checkout-block {
+  margin-bottom: 36px;
+}
+
+.checkout-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.checkout-fields input {
+  background: rgba(255,255,255,0.9);
+  border: none;
+  padding: 12px 14px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.checkout-fields input::placeholder {
+  color: #555;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
