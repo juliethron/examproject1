@@ -7,40 +7,64 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter&family=Cinzel&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
 <header>
- <div class="nav">
- <a href="index.html" class="logo">
-  Disc of the Dead
-</a>
+  <div class="nav">
+    <a href="index.html" class="logo">
+      Disc of the Dead
+    </a>
 
-   <nav class="nav-links">
-    <a href="shop.html">SHOP</a>
-    <a href="about.html">ABOUT</a>
-    <a href="cart.html">CART</a>
-    <a href="account.html">ACCOUNT</a>
-  </nav>
-</div>
-
+    <nav class="nav-links">
+      <a href="shop.html">SHOP</a>
+      <a href="about.html">ABOUT</a>
+      <a href="cart.html">CART</a>
+      <a href="account.html">ACCOUNT</a>
+    </nav>
+  </div>
 </header>
 
-<main class="product-page">
-  <div class="product-wrapper">
-    <div class="product-meta">
+<main class="account-page">
+
+  <div class="account-layout">
+
+    <div class="account-form">
+
       <h1>ACCOUNT</h1>
 
-      <p class="product-description">
-        This interface exists as a placeholder to demonstrate
-        full ecommerce site structure.
-      </p>
+      <form id="loginForm">
 
-    
-      </div>
+        <input 
+          type="email" 
+          placeholder="e-mail address"
+          required
+        />
+
+        <input 
+          type="password" 
+          placeholder="password"
+          required
+        />
+
+        <a href="#" class="forgot">
+          forgot password?
+        </a>
+
+      </form>
+
     </div>
+
+    <div class="account-action">
+      <button class="primary">
+        LOG IN
+      </button>
+    </div>
+
   </div>
+
 </main>
 
 <footer class="footer">
@@ -75,6 +99,5 @@
   </div>
 </footer>
 
-  
 </body>
 </html>
