@@ -608,6 +608,15 @@ header {
 }
 
 
+.product-wrapper.checkout-layout {
+
+  grid-template-columns: 420px 1fr;   
+  gap: 140px;
+
+  align-items: flex-start;
+}
+
+
 .checkout-layout {
   display: grid;
   grid-template-columns: 420px 1fr;
