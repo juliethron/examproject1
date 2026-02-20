@@ -608,6 +608,31 @@ header {
 }
 
 
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 140px;
+}
+
+
+.checkout-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.checkout-summary {
+  background: rgba(26,30,35,0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+}
+
+.checkout-summary .product-price {
+  font-size: 26px;
+}
+
+
 
 .footer {
   margin-top: auto;
