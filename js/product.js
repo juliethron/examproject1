@@ -41,10 +41,6 @@ const customTitles = [
   "AUDITION"
 ];
 
-function generateRetailPrice() {
-  return Math.random() * (24.99 - 9.99) + 9.99;
-}
-
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -58,7 +54,7 @@ function addToCart(product) {
     cart.push({
       id: product.id,
       customTitle: product.customTitle,
-      finalPrice: product.adjustedPrice,
+      finalPrice: product.discountedPrice,   
       quantity: 1
     });
   }
@@ -85,19 +81,14 @@ function renderProduct(product) {
     return;
   }
 
-  /* ⭐ Stable mapping */
   const index = Math.abs(
     product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
   ) % customTitles.length;
 
-  const basePrice = generateRetailPrice();
-
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
-    customImage: customImages[index],
-    adjustedPrice: basePrice,
-    originalPrice: basePrice + 8
+    customImage: customImages[index]
   };
 
   imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
@@ -105,8 +96,8 @@ function renderProduct(product) {
   descEl.textContent = product.description;
 
   priceEl.innerHTML = `
-    <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
-    <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
+    <span class="old">£${product.price.toFixed(2)}</span>
+    <span class="new">£${product.discountedPrice.toFixed(2)}</span>
   `;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
