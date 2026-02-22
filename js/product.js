@@ -1,12 +1,8 @@
+const container = document.getElementById("product");
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-const productId = new URLSearchParams(window.location.search).get("id");
-
-const imageEl = document.getElementById("productImage");
-const titleEl = document.getElementById("productTitle");
-const descEl = document.getElementById("productDescription");
-const priceEl = document.getElementById("productPrice");
-const buttonEl = document.getElementById("addToCartBtn");
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -49,8 +45,9 @@ async function fetchProduct(id) {
     const res = await fetch(`${API_URL}/${id}`);
     const json = await res.json();
     return json.data;
+
   } catch (error) {
-    console.error("API ERROR:", error);
+    console.error("Failed to load product", error);
     return null;
   }
 }
@@ -78,28 +75,18 @@ function addToCart(product) {
 }
 
 function renderProduct(product) {
-  if (!product) {
-    titleEl.textContent = "PRODUCT LOAD FAILURE";
+
+  if (!container || !product) {
+    container.innerHTML = "<p>PRODUCT FILE CORRUPTED</p>";
     return;
   }
 
-  const index = productId.charCodeAt(0) % customTitles.length;
-  const basePrice = generateRetailPrice();
+  /* ⭐ Stable mapping instead of random */
+  const index = Math.abs(
+    product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
 
-  const customDescriptions = [
-    "A research team uncovers a shape-shifting terror in Antarctica.",
-    "Grief twists into psychological horror.",
-    "A satanic legacy emerges from tragedy.",
-    "A surreal descent into nightmare logic.",
-    "An experimental weapons test goes catastrophically wrong.",
-    "Evil returns to Haddonfield.",
-    "Isolation breeds madness.",
-    "Something monstrous lurks within.",
-    "Reality fractures under surveillance.",
-    "Games of survival begin.",
-    "Darkness waits below.",
-    "Pain becomes ritual."
-  ];
+  const basePrice = generateRetailPrice();
 
   const enrichedProduct = {
     ...product,
@@ -109,26 +96,52 @@ function renderProduct(product) {
     originalPrice: basePrice + 8
   };
 
-  imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
-  titleEl.textContent = enrichedProduct.customTitle;
-  descEl.textContent = customDescriptions[index];
+  container.innerHTML = `
+    <div class="product-image"
+        style="background-image:url('${enrichedProduct.customImage}')">
+    </div>
 
-  priceEl.innerHTML = `
-    <div class="price">
-      <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
-      <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
+    <div class="product-meta">
+        <span class="product-label">
+          FILE ID: ${product.id.slice(0, 8).toUpperCase()}
+        </span>
+
+        <h1>${enrichedProduct.customTitle}</h1>
+
+        <p class="product-description">
+          ${product.description}
+        </p>
+
+        <div class="product-price">
+          <span class="old">
+            £${enrichedProduct.originalPrice.toFixed(2)}
+          </span>
+
+          <span class="new">
+            £${enrichedProduct.adjustedPrice.toFixed(2)}
+          </span>
+        </div>
+
+        <div class="product-actions">
+          <button class="load" id="addToCartBtn">
+            ADD TO CART
+          </button>
+        </div>
     </div>
   `;
 
-  buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
+  const button = document.getElementById("addToCartBtn");
+  button.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
 (async () => {
+
   if (!productId) {
-    titleEl.textContent = "NO FILE SELECTED";
+    container.innerHTML = "<p>NO FILE SELECTED</p>";
     return;
   }
 
   const product = await fetchProduct(productId);
   renderProduct(product);
+
 })();
