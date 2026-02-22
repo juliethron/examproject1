@@ -1,3 +1,5 @@
+console.log("PRODUCT JS LOADED");
+
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
 const params = new URLSearchParams(window.location.search);
@@ -10,6 +12,22 @@ const priceEl = document.getElementById("productPrice");
 const buttonEl = document.getElementById("addToCartBtn");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+
+
+function getStableIndex(id) {
+  return Math.abs(
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
+}
+
+function getStablePrice(id) {
+  return 9.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
+  );
+}
+
+
 
 const customImages = [
   "bilds/thething.jpg",
@@ -41,15 +59,14 @@ const customTitles = [
   "AUDITION"
 ];
 
-function generateRetailPrice() {
-  return Math.random() * (24.99 - 9.99) + 9.99;
-}
+
 
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 function addToCart(product) {
+
   const existingItem = cart.find(item => item.id === product.id);
 
   if (existingItem) {
@@ -64,12 +81,24 @@ function addToCart(product) {
   }
 
   persistCart();
+
+  if (buttonEl) {
+    buttonEl.textContent = "LOADED ✓";
+  }
 }
 
+
+
 async function fetchProduct(id) {
+
+  console.log("Fetching product:", id);
+
   try {
     const res = await fetch(`${API_URL}/${id}`);
     const json = await res.json();
+
+    console.log("API Response:", json);
+
     return json.data;
 
   } catch (error) {
@@ -78,44 +107,62 @@ async function fetchProduct(id) {
   }
 }
 
+
+
 function renderProduct(product) {
 
+  console.log("Rendering product:", product);
+
   if (!product) {
-    titleEl.textContent = "PRODUCT FILE CORRUPTED";
+    if (titleEl) titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  /* ⭐ Stable mapping */
-  const index = Math.abs(
-    product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
+  const index = getStableIndex(product.id);
 
-  const basePrice = generateRetailPrice();
+  const adjustedPrice = getStablePrice(product.id);
+  const originalPrice = adjustedPrice + 8;
 
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
     customImage: customImages[index],
-    adjustedPrice: basePrice,
-    originalPrice: basePrice + 8
+    adjustedPrice,
+    originalPrice
   };
 
-  imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
-  titleEl.textContent = enrichedProduct.customTitle;
-  descEl.textContent = product.description;
+  if (imageEl) {
+    imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
+  }
 
-  priceEl.innerHTML = `
-    <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
-    <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
-  `;
+  if (titleEl) {
+    titleEl.textContent = enrichedProduct.customTitle;
+  }
 
-  buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
+  if (descEl) {
+    descEl.textContent = product.description;
+  }
+
+  if (priceEl) {
+    priceEl.innerHTML = `
+      <span class="old">£${originalPrice.toFixed(2)}</span>
+      <span class="new">£${adjustedPrice.toFixed(2)}</span>
+    `;
+  }
+
+  if (buttonEl) {
+    buttonEl.onclick = () => addToCart(enrichedProduct);
+  }
 }
+
+
 
 (async () => {
 
+  console.log("Init started");
+
   if (!productId) {
-    titleEl.textContent = "NO FILE SELECTED";
+    if (titleEl) titleEl.textContent = "NO FILE SELECTED";
     return;
   }
 
