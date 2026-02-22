@@ -1,30 +1,15 @@
-const grid = document.getElementById("grid");
-const cartBtn = document.getElementById("cartBtn");
-const cartPanel = document.getElementById("cartPanel");
-const cartItems = document.getElementById("cartItems");
-const countEl = document.getElementById("count");
-const carouselTrack = document.getElementById("carouselTrack");
+const imageEl = document.getElementById("productImage");
+const titleEl = document.getElementById("productTitle");
+const descEl = document.getElementById("productDescription");
+const priceEl = document.getElementById("productPrice");
+const buttonEl = document.getElementById("addToCartBtn");
 
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-let products = [];
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-
-function isLoggedIn() {
-  return localStorage.getItem("loggedIn") === "true";
-}
-
-function login() {
-  localStorage.setItem("loggedIn", "true");
-  updateUIForAuth();
-}
-
-function logout() {
-  localStorage.setItem("loggedIn", "false");
-  updateUIForAuth();
-}
-
 
 const customImages = [
   "bilds/thething.jpg",
@@ -56,142 +41,36 @@ const customTitles = [
   "AUDITION"
 ];
 
-
-function generateRetailPrice() {
-  return Math.random() * (24.99 - 9.99) + 9.99;
+function getStableIndex(id) {
+  return Math.abs(
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
 }
 
+function getStablePrice(id) {
+  return 9.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
+  );
+}
 
-async function fetchProducts() {
+async function fetchProduct(id) {
   try {
-    const response = await fetch(API_URL);
-    const json = await response.json();
-
-    products = json.data.slice(0, 12).map((product, index) => {
-
-      const basePrice = generateRetailPrice();
-
-      return {
-        ...product,
-        customImage: customImages[index % customImages.length],
-        customTitle: customTitles[index % customTitles.length],
-        adjustedPrice: product.discountedPrice,
-originalPrice: product.price
-      };
-    });
-
-    renderCarousel(products);
-    renderProducts(products);
+    const res = await fetch(`${API_URL}/${id}`);
+    const json = await res.json();
+    return json.data;
 
   } catch (error) {
-    console.error("Failed to fetch products:", error);
-
-    if (grid) {
-      grid.innerHTML = "<p>UNABLE TO ACCESS INVENTORY</p>";
-    }
+    console.error("Failed to load product", error);
+    return null;
   }
 }
 
-
-function renderCarousel(items) {
-  if (!carouselTrack) return;
-
-  const featured = items.slice(0, 3);
-
-  carouselTrack.innerHTML = featured.map((product, index) => `
-    <div 
-      class="carousel-slide ${index === 0 ? "active" : ""}"
-      style="background-image:url('${product.customImage}')"
-      aria-label="Featured product ${product.customTitle}"
-      role="img"
-      onclick="openProduct('${product.id}')">
-
-      <div class="carousel-overlay">
-        <h2>${product.customTitle}</h2>
-      </div>
-    </div>
-  `).join("");
-
-  startCarousel();
+function persistCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function startCarousel() {
-  const slides = document.querySelectorAll(".carousel-slide");
-  if (!slides.length) return;
-
-  let current = 0;
-
-  setInterval(() => {
-    slides[current].classList.remove("active");
-    current = (current + 1) % slides.length;
-    slides[current].classList.add("active");
-  }, 3500);
-}
-
-
-function renderProducts(items) {
-  if (!grid) return;
-
-  grid.innerHTML = items.map(product => `
-    <div class="card" onclick="openProduct('${product.id}')">
-      <div
-        class="poster"
-        style="background-image:url('${product.customImage}')">
-      </div>
-
-      <div class="card-content">
-        <h3>${product.customTitle}</h3>
-
-        <div class="price-cart">
-          <div class="price">
-            <span class="old">
-              £${product.originalPrice.toFixed(2)}
-            </span>
-
-            <span class="new">
-              £${product.adjustedPrice.toFixed(2)}
-            </span>
-          </div>
-
-          <button 
-            class="add"
-            aria-label="Add ${product.customTitle} to cart"
-            onclick="handleAddToCart(event, '${product.id}')">
-            ADD TO CART
-          </button>
-        </div>
-      </div>
-    </div>
-  `).join("");
-
-  updateUIForAuth();
-}
-
-function updateUIForAuth() {
-  const buttons = document.querySelectorAll(".add");
-
-  buttons.forEach(button => {
-    button.textContent = "ADD TO CART";
-    button.style.opacity = "1";
-  });
-}
-
-function handleAddToCart(e, id) {
-  e.stopPropagation();
-  addToCart(id);
-}
-
-
-function openProduct(id) {
-  window.location.href = `product.html?id=${id}`;
-}
-
-
-function addToCart(id) {
-  const product = products.find(p => p.id === id);
-  if (!product) return;
-
-  const existingItem = cart.find(item => item.id === id);
+function addToCart(product) {
+  const existingItem = cart.find(item => item.id === product.id);
 
   if (existingItem) {
     existingItem.quantity++;
@@ -205,170 +84,61 @@ function addToCart(id) {
   }
 
   persistCart();
-  updateCartCount();
-  renderCart();
+  buttonEl.textContent = "LOADED ✓";
 }
 
-function changeQuantity(id, delta) {
-  const item = cart.find(p => p.id === id);
-  if (!item) return;
+function renderProduct(product) {
 
-  item.quantity += delta;
-
-  if (item.quantity <= 0) {
-    cart = cart.filter(p => p.id !== id);
-  }
-
-  persistCart();
-  updateCartCount();
-  renderCart();
-}
-
-function persistCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function updateCartCount() {
-  if (!countEl) return;
-
-  const totalItems = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
-
-  countEl.textContent = totalItems;
-}
-
-function renderCart() {
-  if (!cartItems) return;
-
-  cartItems.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div>
-        <strong>${item.customTitle}</strong>
-
-        <div class="qty-controls">
-          <button onclick="changeQuantity('${item.id}', -1)">–</button>
-          <span>${item.quantity}</span>
-          <button onclick="changeQuantity('${item.id}', 1)">+</button>
-        </div>
-      </div>
-
-      <span>
-        £${(item.finalPrice * item.quantity).toFixed(2)}
-      </span>
-    </div>
-  `).join("");
-
-  updateCartTotal();
-}
-
-function updateCartTotal() {
-  const totalEl = document.getElementById("cartTotal");
-  if (!totalEl) return;
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.finalPrice * item.quantity,
-    0
-  );
-
-  totalEl.textContent = `TOTAL — £${total.toFixed(2)}`;
-}
-
-
-function goToCheckout() {
-  if (!cart.length) {
-    alert("CART EMPTY");
+  if (!product || !titleEl) {
+    titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  window.location.href = "checkout.html";
+  const index = getStableIndex(product.id);
+
+  const adjustedPrice = getStablePrice(product.id);
+  const originalPrice = adjustedPrice + 8;
+
+  const enrichedProduct = {
+    ...product,
+    customTitle: customTitles[index],
+    customImage: customImages[index],
+    adjustedPrice,
+    originalPrice
+  };
+
+  if (imageEl) {
+    imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
+  }
+
+  if (titleEl) {
+    titleEl.textContent = enrichedProduct.customTitle;
+  }
+
+  if (descEl) {
+    descEl.textContent = "Classified archive footage. Viewer discretion advised.";
+  }
+
+  if (priceEl) {
+    priceEl.innerHTML = `
+      <span class="old">£${originalPrice.toFixed(2)}</span>
+      <span class="new">£${adjustedPrice.toFixed(2)}</span>
+    `;
+  }
+
+  if (buttonEl) {
+    buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
+  }
 }
 
-function completeOrder() {
-  if (!cart.length) {
-    alert("CART EMPTY");
+(async () => {
+
+  if (!productId || !titleEl) {
+    if (titleEl) titleEl.textContent = "NO FILE SELECTED";
     return;
   }
 
-  localStorage.removeItem("cart");
-  cart = [];
+  const product = await fetchProduct(productId);
+  renderProduct(product);
 
-  window.location.href = "confirmation.html";
-}
-
-
-const loginForm = document.getElementById("loginForm");
-
-if (loginForm) {
-
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const errorEl = document.getElementById("formError");
-
-  loginForm.addEventListener("submit", (e) => {
-
-    e.preventDefault();
-
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    errorEl.textContent = "";
-    emailInput.classList.remove("input-error");
-    passwordInput.classList.remove("input-error");
-
-    if (!email) {
-      showError("E-mail required", emailInput);
-      return;
-    }
-
-    if (!email.includes("@")) {
-      showError("Invalid e-mail format", emailInput);
-      return;
-    }
-
-    if (!password) {
-      showError("Password required", passwordInput);
-      return;
-    }
-
-    if (password.length < 6) {
-      showError("Password must be at least 6 characters", passwordInput);
-      return;
-    }
-
-    localStorage.setItem("loggedIn", "true");
-
-    errorEl.style.color = "var(--ink)";
-    errorEl.textContent = "ACCESS GRANTED";
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 700);
-  });
-
-  function showError(message, input) {
-    errorEl.textContent = message;
-    input.classList.add("input-error");
-  }
-
-  [emailInput, passwordInput].forEach(input => {
-    input.addEventListener("input", () => {
-      input.classList.remove("input-error");
-      errorEl.textContent = "";
-    });
-  });
-}
-
-
-if (cartBtn && cartPanel) {
-  cartBtn.addEventListener("click", () => {
-    cartPanel.classList.toggle("open");
-  });
-}
-
-
-fetchProducts();
-updateCartCount();
-renderCart();
-updateUIForAuth();
+})();
