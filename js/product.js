@@ -76,12 +76,18 @@ function addToCart(product) {
 
 function renderProduct(product) {
 
-  if (!container || !product) {
+  /* ✅ HARD SAFETY CHECK */
+  if (!container) {
+    console.error("Product container missing in HTML");
+    return;
+  }
+
+  if (!product) {
     container.innerHTML = "<p>PRODUCT FILE CORRUPTED</p>";
     return;
   }
 
-  /* ⭐ Stable mapping instead of random */
+  /* ⭐ Stable movie mapping */
   const index = Math.abs(
     product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
   ) % customTitles.length;
@@ -135,6 +141,11 @@ function renderProduct(product) {
 }
 
 (async () => {
+
+  if (!container) {
+    console.error("Missing #product container");
+    return;
+  }
 
   if (!productId) {
     container.innerHTML = "<p>NO FILE SELECTED</p>";
