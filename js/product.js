@@ -41,16 +41,8 @@ const customTitles = [
   "AUDITION"
 ];
 
-function getStableIndex(id) {
-  return Math.abs(
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
-}
-
-function getStablePrice(id) {
-  return 9.99 + (
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
-  );
+function generateRetailPrice() {
+  return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
 function persistCart() {
@@ -72,7 +64,6 @@ function addToCart(product) {
   }
 
   persistCart();
-  buttonEl.textContent = "LOADED ✓";
 }
 
 async function fetchProduct(id) {
@@ -88,39 +79,41 @@ async function fetchProduct(id) {
 }
 
 function renderProduct(product) {
+
   if (!product) {
     titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  const index = getStableIndex(product.id);
+  /* ⭐ Stable mapping */
+  const index = Math.abs(
+    product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
 
-  const adjustedPrice = getStablePrice(product.id);
-  const originalPrice = adjustedPrice + 8;
+  const basePrice = generateRetailPrice();
 
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
     customImage: customImages[index],
-    adjustedPrice,
-    originalPrice
+    adjustedPrice: basePrice,
+    originalPrice: basePrice + 8
   };
 
   imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
   titleEl.textContent = enrichedProduct.customTitle;
-
-  descEl.textContent =
-    "Classified archive footage. Viewer discretion advised.";
+  descEl.textContent = product.description;
 
   priceEl.innerHTML = `
-    <span class="old">£${originalPrice.toFixed(2)}</span>
-    <span class="new">£${adjustedPrice.toFixed(2)}</span>
+    <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
+    <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
   `;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+(async () => {
+
   if (!productId) {
     titleEl.textContent = "NO FILE SELECTED";
     return;
@@ -128,4 +121,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const product = await fetchProduct(productId);
   renderProduct(product);
-});
+
+})();
