@@ -41,6 +41,21 @@ const customTitles = [
   "AUDITION"
 ];
 
+const customDescriptions = [
+  "A grieving family becomes the target of a sinister, otherworldly presence tied to their ancestry.",
+  "Love, loneliness, and unimaginable cruelty.",
+  "Darkness below. Fear without escape.",
+  "A chilling journey through censorship, memory, and psychological unease.",
+  "Isolation. Madness. The horror within.",
+  "Survival becomes a brutal game of endurance and terror.",
+  "Reality fractures as a malevolent presence reveals itself.",
+  "An unsettling investigation into a mysterious figure linked to a series of disturbing events.",
+  "An experimental terror experience that pushes psychological boundaries.",
+  "A research team in Antarctica encounters a shape-shifting organism capable of perfectly imitating its victims.",
+  "A surreal descent into obsession, paranoia, and supernatural horror.",
+  "One night. One masked figure. Pure relentless dread."
+];
+
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -93,9 +108,9 @@ function renderProduct(product) {
 
   imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
   titleEl.textContent = enrichedProduct.customTitle;
-  descEl.textContent = product.description;
+  descEl.textContent = customDescriptions[index];
 
-  /* ⭐ REAL API PRICING */
+  
   priceEl.innerHTML = `
     <span class="old">£${product.price.toFixed(2)}</span>
     <span class="new">£${product.discountedPrice.toFixed(2)}</span>
