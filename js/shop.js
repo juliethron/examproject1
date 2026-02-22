@@ -37,6 +37,12 @@ function getStableIndex(id) {
   ) % customTitles.length;
 }
 
+function getStablePrice(id) {
+  return 14.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 20
+  );
+}
+
 async function fetchProducts() {
   try {
     const res = await fetch(API_URL);
@@ -99,8 +105,11 @@ function renderCard(product, index) {
 
           <div class="price-cart">
             <div class="price">
-              <span class="old">£${product.price.toFixed(2)}</span>
-              <span class="new">£${product.discountedPrice.toFixed(2)}</span>
+              const newPrice = getStablePrice(product.id);
+const oldPrice = newPrice + 10;
+
+<span class="old">£${oldPrice.toFixed(2)}</span>
+<span class="new">£${newPrice.toFixed(2)}</span>
             </div>
 
             <button class="add">LOAD</button>
