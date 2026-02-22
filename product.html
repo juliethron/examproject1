@@ -30,10 +30,55 @@
 </header>
 
 <main class="product-page">
-    <div class="product-wrapper" id="product"></div>
-</main>
+  <div class="product-wrapper">
 
-<script src="js/script.js"></script>
+    <div 
+      class="product-image" 
+      id="productImage">
+    </div>
+
+    <div class="product-meta">
+
+      <span class="product-label">FEATURED TITLE</span>
+
+      <h1 id="productTitle">Loading...</h1>
+
+      <p 
+        class="product-description" 
+        id="productDescription">
+        Retrieving film data...
+      </p>
+
+      <div 
+        class="product-price" 
+        id="productPrice">
+        £0.00
+      </div>
+
+      <div class="format-selector">
+
+        <span class="section-label">FORMAT</span>
+
+        <div class="format-options">
+          <button data-format="DVD">DVD</button>
+          <button data-format="BLU-RAY">BLU-RAY</button>
+          <button data-format="DIGITAL">DIGITAL</button>
+        </div>
+
+      </div>
+
+      <div class="product-actions">
+        <button 
+          class="load"
+          id="addToCartBtn">
+          ADD TO CART
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</main>
 
     <footer class="footer">
   <div class="footer-inner">
