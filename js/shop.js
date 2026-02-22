@@ -95,6 +95,10 @@ function renderProducts(products) {
 }
 
 function renderCard(product, index) {
+
+  const newPrice = getStablePrice(product.id);
+  const oldPrice = newPrice + 10;
+
   gridEl.innerHTML += `
     <div class="card">
       <a href="product.html?id=${product.id}">
@@ -105,11 +109,8 @@ function renderCard(product, index) {
 
           <div class="price-cart">
             <div class="price">
-              const newPrice = getStablePrice(product.id);
-const oldPrice = newPrice + 10;
-
-<span class="old">£${oldPrice.toFixed(2)}</span>
-<span class="new">£${newPrice.toFixed(2)}</span>
+              <span class="old">£${oldPrice.toFixed(2)}</span>
+              <span class="new">£${newPrice.toFixed(2)}</span>
             </div>
 
             <button class="add">LOAD</button>
