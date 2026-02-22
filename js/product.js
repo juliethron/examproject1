@@ -1,13 +1,13 @@
+const API_URL = "https://v2.api.noroff.dev/online-shop";
+
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
 const imageEl = document.getElementById("productImage");
 const titleEl = document.getElementById("productTitle");
 const descEl = document.getElementById("productDescription");
 const priceEl = document.getElementById("productPrice");
 const buttonEl = document.getElementById("addToCartBtn");
-
-const API_URL = "https://v2.api.noroff.dev/online-shop";
-
-const params = new URLSearchParams(window.location.search);
-const productId = params.get("id");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -41,16 +41,25 @@ const customTitles = [
   "AUDITION"
 ];
 
-function getStableIndex(id) {
-  return Math.abs(
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
+function persistCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function getStablePrice(id) {
-  return 9.99 + (
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
-  );
+function addToCart(product) {
+  const existingItem = cart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({
+      id: product.id,
+      customTitle: product.customTitle,
+      finalPrice: product.discountedPrice,   
+      quantity: 1
+    });
+  }
+
+  persistCart();
 }
 
 async function fetchProduct(id) {
@@ -65,76 +74,40 @@ async function fetchProduct(id) {
   }
 }
 
-function persistCart() {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function addToCart(product) {
-  const existingItem = cart.find(item => item.id === product.id);
-
-  if (existingItem) {
-    existingItem.quantity++;
-  } else {
-    cart.push({
-      id: product.id,
-      customTitle: product.customTitle,
-      finalPrice: product.adjustedPrice,
-      quantity: 1
-    });
-  }
-
-  persistCart();
-  buttonEl.textContent = "LOADED ✓";
-}
-
 function renderProduct(product) {
 
-  if (!product || !titleEl) {
+  if (!product) {
     titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  const index = getStableIndex(product.id);
-
-  const adjustedPrice = getStablePrice(product.id);
-  const originalPrice = adjustedPrice + 8;
+  const index = Math.abs(
+    product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
 
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
-    customImage: customImages[index],
-    adjustedPrice,
-    originalPrice
+    customImage: customImages[index]
   };
 
-  if (imageEl) {
-    imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
-  }
+  imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
+  titleEl.textContent = enrichedProduct.customTitle;
+  descEl.textContent = product.description;
 
-  if (titleEl) {
-    titleEl.textContent = enrichedProduct.customTitle;
-  }
+  /* ⭐ REAL API PRICING */
+  priceEl.innerHTML = `
+    <span class="old">£${product.price.toFixed(2)}</span>
+    <span class="new">£${product.discountedPrice.toFixed(2)}</span>
+  `;
 
-  if (descEl) {
-    descEl.textContent = "Classified archive footage. Viewer discretion advised.";
-  }
-
-  if (priceEl) {
-    priceEl.innerHTML = `
-      <span class="old">£${originalPrice.toFixed(2)}</span>
-      <span class="new">£${adjustedPrice.toFixed(2)}</span>
-    `;
-  }
-
-  if (buttonEl) {
-    buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
-  }
+  buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
 (async () => {
 
-  if (!productId || !titleEl) {
-    if (titleEl) titleEl.textContent = "NO FILE SELECTED";
+  if (!productId) {
+    titleEl.textContent = "NO FILE SELECTED";
     return;
   }
 
