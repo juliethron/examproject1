@@ -84,5 +84,8 @@ function renderProducts(products) {
 
 (async () => {
   const products = await fetchProducts();
-  renderProducts(products);
+
+  const curatedProducts = products.slice(0, 12); ⭐ LIMIT HERE
+
+  renderProducts(curatedProducts);
 })();
