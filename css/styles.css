@@ -896,3 +896,29 @@ header {
   border-color: var(--accent);
   color: var(--ink);
 }
+
+
+.movie-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.movie-meta span {
+  display: block;
+  font-size: 10px;
+  opacity: 0.5;
+}
+
+.stock-warning {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  opacity: 0.85;
+}
