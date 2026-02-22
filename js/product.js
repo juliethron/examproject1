@@ -4,6 +4,8 @@ const API_URL = "https://v2.api.noroff.dev/online-shop";
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
 
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
 const customImages = [
   "bilds/thething.jpg",
   "bilds/hereditary.jpg",
@@ -35,7 +37,7 @@ const customTitles = [
 ];
 
 function generateRetailPrice() {
-  return (Math.random() * (24.99 - 9.99) + 9.99);
+  return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
 async function fetchProduct(id) {
@@ -50,6 +52,28 @@ async function fetchProduct(id) {
   }
 }
 
+function persistCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function addToCart(product) {
+  const existingItem = cart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({
+      id: product.id,
+      title: product.customTitle,
+      price: product.adjustedPrice,
+      quantity: 1
+    });
+  }
+
+  persistCart();
+  alert("ITEM LOADED INTO CART");
+}
+
 function renderProduct(product) {
   if (!container || !product) {
     container.innerHTML = "<p>PRODUCT FILE CORRUPTED</p>";
@@ -58,11 +82,19 @@ function renderProduct(product) {
 
   const index = Math.floor(Math.random() * customTitles.length);
 
-  const adjustedPrice = generateRetailPrice();
+  const basePrice = generateRetailPrice();
+
+  const enrichedProduct = {
+    ...product,
+    customTitle: customTitles[index],
+    customImage: customImages[index],
+    adjustedPrice: basePrice,
+    originalPrice: basePrice + 8
+  };
 
   container.innerHTML = `
     <div class="product-image"
-        style="background-image:url('${customImages[index]}')">
+        style="background-image:url('${enrichedProduct.customImage}')">
     </div>
 
     <div class="product-meta">
@@ -70,21 +102,32 @@ function renderProduct(product) {
         FILE ID: ${product.id.slice(0, 8).toUpperCase()}
         </span>
 
-        <h1>${customTitles[index]}</h1>
+        <h1>${enrichedProduct.customTitle}</h1>
 
         <p class="product-description">
         ${product.description}
         </p>
 
         <div class="product-price">
-        £${adjustedPrice.toFixed(2)}
+            <span class="old">
+              £${enrichedProduct.originalPrice.toFixed(2)}
+            </span>
+
+            <span class="new">
+              £${enrichedProduct.adjustedPrice.toFixed(2)}
+            </span>
         </div>
 
         <div class="product-actions">
-        <button class="load">ADD TO CART</button>
+            <button class="load" id="addToCartBtn">
+              ADD TO CART
+            </button>
         </div>
     </div>
   `;
+
+  const button = document.getElementById("addToCartBtn");
+  button.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
 (async () => {
