@@ -1,76 +1,40 @@
-const API_URL = "https://v2.api.noroff.dev/online-shop";
 const gridEl = document.getElementById("grid");
 
-const customImages = [
-  "bilds/thething.jpg",
-  "bilds/hereditary.jpg",
-  "bilds/longlegs.jpg",
-  "bilds/suspiria.jpg",
-  "bilds/weapons.jpg",
-  "bilds/halloween.jpg",
-  "bilds/theshining.jpg",
-  "bilds/malignant.jpg",
-  "bilds/censor.jpg",
-  "bilds/saw.jpg",
-  "bilds/thedescent.jpg",
-  "bilds/audition.jpg"
+const movies = [
+  { id: "thing", title: "THE THING", image: "bilds/thething.jpg", price: 29.99, discountedPrice: 19.99 },
+  { id: "hereditary", title: "HEREDITARY", image: "bilds/hereditary.jpg", price: 39.99, discountedPrice: 24.99 },
+  { id: "longlegs", title: "LONGLEGS", image: "bilds/longlegs.jpg", price: 34.99, discountedPrice: 22.99 },
+  { id: "suspiria", title: "SUSPIRIA", image: "bilds/suspiria.jpg", price: 44.99, discountedPrice: 28.99 },
+  { id: "weapons", title: "WEAPONS", image: "bilds/weapons.jpg", price: 31.99, discountedPrice: 21.99 },
+  { id: "halloween", title: "HALLOWEEN", image: "bilds/halloween.jpg", price: 26.99, discountedPrice: 18.99 },
+  { id: "shining", title: "THE SHINING", image: "bilds/theshining.jpg", price: 49.99, discountedPrice: 32.99 },
+  { id: "malignant", title: "MALIGNANT", image: "bilds/malignant.jpg", price: 36.99, discountedPrice: 23.99 },
+  { id: "censor", title: "CENSOR", image: "bilds/censor.jpg", price: 27.99, discountedPrice: 17.99 },
+  { id: "saw", title: "SAW", image: "bilds/saw.jpg", price: 24.99, discountedPrice: 14.99 },
+  { id: "descent", title: "THE DESCENT", image: "bilds/thedescent.jpg", price: 33.99, discountedPrice: 20.99 },
+  { id: "audition", title: "AUDITION", image: "bilds/audition.jpg", price: 41.99, discountedPrice: 26.99 }
 ];
 
-const customTitles = [
-  "THE THING",
-  "HEREDITARY",
-  "LONGLEGS",
-  "SUSPIRIA",
-  "WEAPONS",
-  "HALLOWEEN",
-  "THE SHINING",
-  "MALIGNANT",
-  "CENSOR",
-  "SAW",
-  "THE DESCENT",
-  "AUDITION"
-];
-
-function getStableIndex(id) {
-  return Math.abs(
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
-}
-
-async function fetchProducts() {
-  try {
-    const res = await fetch(API_URL);
-    const json = await res.json();
-    return json.data;
-
-  } catch (error) {
-    console.error("Failed to load products", error);
-    return [];
-  }
-}
-
-function renderProducts(products) {
+function renderMovies() {
 
   if (!gridEl) return;
 
   gridEl.innerHTML = "";
 
-  products.forEach(product => {
-
-    const index = getStableIndex(product.id);
+  movies.forEach(movie => {
 
     gridEl.innerHTML += `
       <div class="card">
-        <a href="product.html?id=${product.id}">
-          <div class="poster" style="background-image:url('${customImages[index]}')"></div>
+        <a href="product.html?id=${movie.id}">
+          <div class="poster" style="background-image:url('${movie.image}')"></div>
 
           <div class="card-content">
-            <h3>${customTitles[index]}</h3>
+            <h3>${movie.title}</h3>
 
             <div class="price-cart">
               <div class="price">
-                <span class="old">£${product.price.toFixed(2)}</span>
-                <span class="new">£${product.discountedPrice.toFixed(2)}</span>
+                <span class="old">£${movie.price.toFixed(2)}</span>
+                <span class="new">£${movie.discountedPrice.toFixed(2)}</span>
               </div>
 
               <button class="add">LOAD</button>
@@ -82,7 +46,4 @@ function renderProducts(products) {
   });
 }
 
-(async () => {
-  const products = await fetchProducts();
-  renderProducts(products);
-})();
+renderMovies();
