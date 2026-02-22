@@ -58,7 +58,7 @@ const customTitles = [
 
 
 function generateRetailPrice() {
-  return (Math.random() * (24.99 - 9.99) + 9.99);
+  return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
 
@@ -73,10 +73,8 @@ async function fetchProducts() {
 
       return {
         ...product,
-
         customImage: customImages[index % customImages.length],
         customTitle: customTitles[index % customTitles.length],
-
         adjustedPrice: basePrice,
         originalPrice: basePrice + 8
       };
@@ -101,13 +99,12 @@ function renderCarousel(items) {
   const featured = items.slice(0, 3);
 
   carouselTrack.innerHTML = featured.map((product, index) => `
-  <div 
-    class="carousel-slide ${index === 0 ? "active" : ""}"
-    style="background-image:url('${product.customImage}')"
-    aria-label="Featured product ${product.customTitle}"
-    role="img"
-    onclick="openProduct('${product.id}')">
-
+    <div 
+      class="carousel-slide ${index === 0 ? "active" : ""}"
+      style="background-image:url('${product.customImage}')"
+      aria-label="Featured product ${product.customTitle}"
+      role="img"
+      onclick="openProduct('${product.id}')">
 
       <div class="carousel-overlay">
         <h2>${product.customTitle}</h2>
@@ -120,7 +117,6 @@ function renderCarousel(items) {
 
 function startCarousel() {
   const slides = document.querySelectorAll(".carousel-slide");
-
   if (!slides.length) return;
 
   let current = 0;
@@ -157,11 +153,10 @@ function renderProducts(items) {
             </span>
           </div>
 
-          <button
-            <button 
-          class="add"
-        aria-label="Add ${product.customTitle} to cart"
-  onclick="handleAddToCart(event, '${product.id}')">
+          <button 
+            class="add"
+            aria-label="Add ${product.customTitle} to cart"
+            onclick="handleAddToCart(event, '${product.id}')">
             ADD TO CART
           </button>
         </div>
@@ -172,7 +167,6 @@ function renderProducts(items) {
   updateUIForAuth();
 }
 
-
 function updateUIForAuth() {
   const buttons = document.querySelectorAll(".add");
 
@@ -181,7 +175,6 @@ function updateUIForAuth() {
     button.style.opacity = "1";
   });
 }
-
 
 function handleAddToCart(e, id) {
   e.stopPropagation();
@@ -231,11 +224,9 @@ function changeQuantity(id, delta) {
   renderCart();
 }
 
-
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-
 
 function updateCartCount() {
   if (!countEl) return;
@@ -247,7 +238,6 @@ function updateCartCount() {
 
   countEl.textContent = totalItems;
 }
-
 
 function renderCart() {
   if (!cartItems) return;
@@ -272,7 +262,6 @@ function renderCart() {
 
   updateCartTotal();
 }
-
 
 function updateCartTotal() {
   const totalEl = document.getElementById("cartTotal");
@@ -302,10 +291,73 @@ function completeOrder() {
     return;
   }
 
-  localStorage.removeItem("cart");  
+  localStorage.removeItem("cart");
   cart = [];
 
   window.location.href = "confirmation.html";
+}
+
+
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const errorEl = document.getElementById("formError");
+
+  loginForm.addEventListener("submit", (e) => {
+
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    errorEl.textContent = "";
+    emailInput.classList.remove("input-error");
+    passwordInput.classList.remove("input-error");
+
+    if (!email) {
+      showError("E-mail required", emailInput);
+      return;
+    }
+
+    if (!email.includes("@")) {
+      showError("Invalid e-mail format", emailInput);
+      return;
+    }
+
+    if (!password) {
+      showError("Password required", passwordInput);
+      return;
+    }
+
+    if (password.length < 6) {
+      showError("Password must be at least 6 characters", passwordInput);
+      return;
+    }
+
+    localStorage.setItem("loggedIn", "true");
+
+    errorEl.style.color = "var(--ink)";
+    errorEl.textContent = "ACCESS GRANTED";
+
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 700);
+  });
+
+  function showError(message, input) {
+    errorEl.textContent = message;
+    input.classList.add("input-error");
+  }
+
+  [emailInput, passwordInput].forEach(input => {
+    input.addEventListener("input", () => {
+      input.classList.remove("input-error");
+      errorEl.textContent = "";
+    });
+  });
 }
 
 
@@ -314,13 +366,6 @@ if (cartBtn && cartPanel) {
     cartPanel.classList.toggle("open");
   });
 }
-
-
-fetchProducts();
-updateCartCount();
-renderCart();
-updateUIForAuth();
-
 
 
 fetchProducts();
