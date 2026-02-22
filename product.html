@@ -8,79 +8,71 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cinzel:wght@600&family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
 <header>
-    <div class="nav">
-  <a href="index.html" class="logo">
-  Disc of the Dead
-</a>
+  <div class="nav">
+    <a href="index.html" class="logo">Disc of the Dead</a>
 
-
-   <nav class="nav-links">
-    <a href="shop.html">SHOP</a>
-    <a href="about.html">ABOUT</a>
-    <a href="cart.html">CART</a>
-    <a href="account.html">ACCOUNT</a>
-  </nav>
-</div>
-
+    <nav class="nav-links">
+      <a href="shop.html">SHOP</a>
+      <a href="about.html">ABOUT</a>
+      <a href="cart.html">CART</a>
+      <a href="account.html">ACCOUNT</a>
+    </nav>
+  </div>
 </header>
 
 <main class="product-page">
-  <div class="product-wrapper">
 
-    <div 
-      class="product-image" 
-      id="productImage">
-    </div>
+  <div id="product">
 
-    <div class="product-meta">
+    <div class="product-wrapper">
 
-      <span class="product-label">FEATURED TITLE</span>
+      <div class="product-image" id="productImage"></div>
 
-      <h1 id="productTitle">Loading...</h1>
+      <div class="product-meta">
 
-      <p 
-        class="product-description" 
-        id="productDescription">
-        Retrieving film data...
-      </p>
+        <span class="product-label">FEATURED TITLE</span>
 
-      <div 
-        class="product-price" 
-        id="productPrice">
-        £0.00
-      </div>
+        <h1 id="productTitle">Loading...</h1>
 
-      <div class="format-selector">
+        <p class="product-description" id="productDescription">
+          Retrieving film data...
+        </p>
 
-        <span class="section-label">FORMAT</span>
-
-        <div class="format-options">
-          <button data-format="DVD">DVD</button>
-          <button data-format="BLU-RAY">BLU-RAY</button>
-          <button data-format="DIGITAL">DIGITAL</button>
+        <div class="product-price" id="productPrice">
+          £0.00
         </div>
 
-      </div>
+        <div class="format-selector">
+          <span class="section-label">FORMAT</span>
 
-      <div class="product-actions">
-        <button 
-          class="load"
-          id="addToCartBtn">
-          ADD TO CART
-        </button>
+          <div class="format-options">
+            <button data-format="DVD">DVD</button>
+            <button data-format="BLU-RAY">BLU-RAY</button>
+            <button data-format="DIGITAL">DIGITAL</button>
+          </div>
+        </div>
+
+        <div class="product-actions">
+          <button class="load" id="addToCartBtn">
+            ADD TO CART
+          </button>
+        </div>
+
       </div>
 
     </div>
 
   </div>
+
 </main>
 
-    <footer class="footer">
+<footer class="footer">
   <div class="footer-inner">
 
     <div class="footer-brand">
@@ -88,7 +80,6 @@
     </div>
 
     <div class="footer-social">
-
       <a href="#" aria-label="Instagram">
         <svg viewBox="0 0 24 24">
           <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.2A4.8 4.8 0 1 0 16.8 12 4.8 4.8 0 0 0 12 7.2zm0 2A2.8 2.8 0 1 1 9.2 12 2.8 2.8 0 0 1 12 9.2zm4.5-2.3a1.1 1.1 0 1 0 1.1 1.1 1.1 1.1 0 0 0-1.1-1.1z"/>
@@ -106,7 +97,6 @@
           <path d="M18.9 2H22l-7.2 8.3L23.5 22h-6.9l-5.4-7-6.1 7H2l7.7-8.9L.5 2h7l4.9 6.4L18.9 2z"/>
         </svg>
       </a>
-
     </div>
 
   </div>
