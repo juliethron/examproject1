@@ -1,33 +1,15 @@
-console.log("PRODUCT JS LOADED");
-
-const API_URL = "https://v2.api.noroff.dev/online-shop";
-
-const params = new URLSearchParams(window.location.search);
-const productId = params.get("id");
-
 const imageEl = document.getElementById("productImage");
 const titleEl = document.getElementById("productTitle");
 const descEl = document.getElementById("productDescription");
 const priceEl = document.getElementById("productPrice");
 const buttonEl = document.getElementById("addToCartBtn");
 
+const API_URL = "https://v2.api.noroff.dev/online-shop";
+
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("id");
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-
-
-function getStableIndex(id) {
-  return Math.abs(
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
-}
-
-function getStablePrice(id) {
-  return 9.99 + (
-    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
-  );
-}
-
-
 
 const customImages = [
   "bilds/thething.jpg",
@@ -59,14 +41,35 @@ const customTitles = [
   "AUDITION"
 ];
 
+function getStableIndex(id) {
+  return Math.abs(
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
+}
 
+function getStablePrice(id) {
+  return 9.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
+  );
+}
+
+async function fetchProduct(id) {
+  try {
+    const res = await fetch(`${API_URL}/${id}`);
+    const json = await res.json();
+    return json.data;
+
+  } catch (error) {
+    console.error("Failed to load product", error);
+    return null;
+  }
+}
 
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 function addToCart(product) {
-
   const existingItem = cart.find(item => item.id === product.id);
 
   if (existingItem) {
@@ -81,40 +84,13 @@ function addToCart(product) {
   }
 
   persistCart();
-
-  if (buttonEl) {
-    buttonEl.textContent = "LOADED ✓";
-  }
+  buttonEl.textContent = "LOADED ✓";
 }
-
-
-
-async function fetchProduct(id) {
-
-  console.log("Fetching product:", id);
-
-  try {
-    const res = await fetch(`${API_URL}/${id}`);
-    const json = await res.json();
-
-    console.log("API Response:", json);
-
-    return json.data;
-
-  } catch (error) {
-    console.error("Failed to load product", error);
-    return null;
-  }
-}
-
-
 
 function renderProduct(product) {
 
-  console.log("Rendering product:", product);
-
-  if (!product) {
-    if (titleEl) titleEl.textContent = "PRODUCT FILE CORRUPTED";
+  if (!product || !titleEl) {
+    titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
@@ -140,7 +116,7 @@ function renderProduct(product) {
   }
 
   if (descEl) {
-    descEl.textContent = product.description;
+    descEl.textContent = "Classified archive footage. Viewer discretion advised.";
   }
 
   if (priceEl) {
@@ -151,17 +127,13 @@ function renderProduct(product) {
   }
 
   if (buttonEl) {
-    buttonEl.onclick = () => addToCart(enrichedProduct);
+    buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
   }
 }
 
-
-
 (async () => {
 
-  console.log("Init started");
-
-  if (!productId) {
+  if (!productId || !titleEl) {
     if (titleEl) titleEl.textContent = "NO FILE SELECTED";
     return;
   }
