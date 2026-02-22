@@ -83,7 +83,9 @@ function renderProduct(product) {
     return;
   }
 
-  const index = Math.floor(Math.random() * customTitles.length);
+ const index = customTitles.findIndex(
+  (_, i) => product.id === customTitlesMap[i]
+);
   const basePrice = generateRetailPrice();
 
   const enrichedProduct = {
@@ -99,9 +101,11 @@ function renderProduct(product) {
   descEl.textContent = product.description;
 
   priceEl.innerHTML = `
+  <div class="price">
     <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
     <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
-  `;
+  </div>
+`;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
