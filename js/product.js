@@ -83,10 +83,23 @@ function renderProduct(product) {
     return;
   }
 
- const index = customTitles.findIndex(
-  (_, i) => product.id === customTitlesMap[i]
-);
+  const index = productId.charCodeAt(0) % customTitles.length;
   const basePrice = generateRetailPrice();
+
+  const customDescriptions = [
+    "A research team uncovers a shape-shifting terror in Antarctica.",
+    "Grief twists into psychological horror.",
+    "A satanic legacy emerges from tragedy.",
+    "A surreal descent into nightmare logic.",
+    "An experimental weapons test goes catastrophically wrong.",
+    "Evil returns to Haddonfield.",
+    "Isolation breeds madness.",
+    "Something monstrous lurks within.",
+    "Reality fractures under surveillance.",
+    "Games of survival begin.",
+    "Darkness waits below.",
+    "Pain becomes ritual."
+  ];
 
   const enrichedProduct = {
     ...product,
@@ -98,14 +111,14 @@ function renderProduct(product) {
 
   imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
   titleEl.textContent = enrichedProduct.customTitle;
-  descEl.textContent = product.description;
+  descEl.textContent = customDescriptions[index];
 
   priceEl.innerHTML = `
-  <div class="price">
-    <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
-    <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
-  </div>
-`;
+    <div class="price">
+      <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
+      <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
+    </div>
+  `;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
