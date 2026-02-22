@@ -41,6 +41,18 @@ const customTitles = [
   "AUDITION"
 ];
 
+function getStableIndex(id) {
+  return Math.abs(
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  ) % customTitles.length;
+}
+
+function getStablePrice(id) {
+  return 9.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 15
+  );
+}
+
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -54,12 +66,13 @@ function addToCart(product) {
     cart.push({
       id: product.id,
       customTitle: product.customTitle,
-      finalPrice: product.discountedPrice,   
+      finalPrice: product.adjustedPrice,
       quantity: 1
     });
   }
 
   persistCart();
+  buttonEl.textContent = "LOADED ✓";
 }
 
 async function fetchProduct(id) {
@@ -75,36 +88,39 @@ async function fetchProduct(id) {
 }
 
 function renderProduct(product) {
-
   if (!product) {
     titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  const index = Math.abs(
-    product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  ) % customTitles.length;
+  const index = getStableIndex(product.id);
+
+  const adjustedPrice = getStablePrice(product.id);
+  const originalPrice = adjustedPrice + 8;
 
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
-    customImage: customImages[index]
+    customImage: customImages[index],
+    adjustedPrice,
+    originalPrice
   };
 
   imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
   titleEl.textContent = enrichedProduct.customTitle;
-  descEl.textContent = product.description;
+
+  descEl.textContent =
+    "Classified archive footage. Viewer discretion advised.";
 
   priceEl.innerHTML = `
-    <span class="old">£${product.price.toFixed(2)}</span>
-    <span class="new">£${product.discountedPrice.toFixed(2)}</span>
+    <span class="old">£${originalPrice.toFixed(2)}</span>
+    <span class="new">£${adjustedPrice.toFixed(2)}</span>
   `;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
-(async () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
   if (!productId) {
     titleEl.textContent = "NO FILE SELECTED";
     return;
@@ -112,5 +128,4 @@ function renderProduct(product) {
 
   const product = await fetchProduct(productId);
   renderProduct(product);
-
-})();
+});
