@@ -40,24 +40,17 @@ function generateRetailPrice() {
   return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
-/* ⭐ NEW — Fake Movie Metadata */
 function generateMovieMeta() {
-  const genres = [
-    "Psychological Horror",
-    "Supernatural Horror",
-    "Sci-Fi Horror",
-    "Slasher",
-    "Cult Classic"
-  ];
-
-  const ratings = ["PG-13", "15", "18", "R"];
+  const genres = ["PSYCHOLOGICAL HORROR", "COSMIC HORROR", "SLASHER", "SUPERNATURAL", "BODY HORROR"];
+  const runtimes = ["89 MIN", "102 MIN", "117 MIN", "124 MIN", "136 MIN"];
+  const ratings = ["★★★★☆", "★★★☆☆", "★★★★★", "★★☆☆☆"];
+  const years = ["1978", "1982", "1999", "2016", "2024"];
 
   return {
     genre: genres[Math.floor(Math.random() * genres.length)],
-    runtime: Math.floor(Math.random() * 60) + 80, 
-    year: Math.floor(Math.random() * 30) + 1995,
+    runtime: runtimes[Math.floor(Math.random() * runtimes.length)],
     rating: ratings[Math.floor(Math.random() * ratings.length)],
-    stock: Math.floor(Math.random() * 8) + 1
+    year: years[Math.floor(Math.random() * years.length)]
   };
 }
 
@@ -103,7 +96,7 @@ function renderProduct(product) {
 
   const index = Math.floor(Math.random() * customTitles.length);
   const basePrice = generateRetailPrice();
-  const meta = generateMovieMeta();  // ⭐ NEW
+  const meta = generateMovieMeta();
 
   const enrichedProduct = {
     ...product,
@@ -111,7 +104,7 @@ function renderProduct(product) {
     customImage: customImages[index],
     adjustedPrice: basePrice,
     originalPrice: basePrice + 8,
-    meta
+    ...meta
   };
 
   container.innerHTML = `
@@ -121,25 +114,21 @@ function renderProduct(product) {
 
     <div class="product-meta">
         <span class="product-label">
-        FILE ID: ${product.id.slice(0, 8).toUpperCase()}
+          FILE ID: ${product.id.slice(0, 8).toUpperCase()}
         </span>
 
         <h1>${enrichedProduct.customTitle}</h1>
 
-        <p class="product-description">
-        ${product.description}
-        </p>
-
         <div class="movie-meta">
-          <div><span>GENRE</span> ${meta.genre}</div>
-          <div><span>RUNTIME</span> ${meta.runtime} mins</div>
-          <div><span>RELEASE</span> ${meta.year}</div>
-          <div><span>RATING</span> ${meta.rating}</div>
+          <span>${enrichedProduct.genre}</span>
+          <span>${enrichedProduct.runtime}</span>
+          <span>${enrichedProduct.year}</span>
+          <span>${enrichedProduct.rating}</span>
         </div>
 
-        <div class="stock-warning">
-          ONLY ${meta.stock} UNITS REMAINING
-        </div>
+        <p class="product-description">
+          ${product.description}
+        </p>
 
         <div class="product-price">
             <span class="old">
@@ -159,8 +148,9 @@ function renderProduct(product) {
     </div>
   `;
 
-  const button = document.getElementById("addToCartBtn");
-  button.addEventListener("click", () => addToCart(enrichedProduct));
+  document
+    .getElementById("addToCartBtn")
+    .addEventListener("click", () => addToCart(enrichedProduct));
 }
 
 (async () => {
