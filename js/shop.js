@@ -83,16 +83,6 @@ function renderProducts(products) {
 }
 
 (async () => {
-
   const products = await fetchProducts();
-
-  if (!products || !products.length) {
-    console.log("No products returned", products);
-    return;
-  }
-
-  const curatedProducts = products.slice(0, 12);
-
-  renderProducts(curatedProducts);
-
+  renderProducts(products);
 })();
