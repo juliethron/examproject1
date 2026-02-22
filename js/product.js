@@ -1,8 +1,13 @@
-const container = document.getElementById("product");
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
+
+const imageEl = document.getElementById("productImage");
+const titleEl = document.getElementById("productTitle");
+const descEl = document.getElementById("productDescription");
+const priceEl = document.getElementById("productPrice");
+const buttonEl = document.getElementById("addToCartBtn");
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -40,18 +45,6 @@ function generateRetailPrice() {
   return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
-async function fetchProduct(id) {
-  try {
-    const res = await fetch(`${API_URL}/${id}`);
-    const json = await res.json();
-    return json.data;
-
-  } catch (error) {
-    console.error("Failed to load product", error);
-    return null;
-  }
-}
-
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -71,23 +64,28 @@ function addToCart(product) {
   }
 
   persistCart();
-  alert("ITEM LOADED INTO CART");
+}
+
+async function fetchProduct(id) {
+  try {
+    const res = await fetch(`${API_URL}/${id}`);
+    const json = await res.json();
+    return json.data;
+
+  } catch (error) {
+    console.error("Failed to load product", error);
+    return null;
+  }
 }
 
 function renderProduct(product) {
 
-  /* ✅ HARD SAFETY CHECK */
-  if (!container) {
-    console.error("Product container missing in HTML");
-    return;
-  }
-
   if (!product) {
-    container.innerHTML = "<p>PRODUCT FILE CORRUPTED</p>";
+    titleEl.textContent = "PRODUCT FILE CORRUPTED";
     return;
   }
 
-  /* ⭐ Stable movie mapping */
+  /* ⭐ Stable mapping */
   const index = Math.abs(
     product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
   ) % customTitles.length;
@@ -102,53 +100,22 @@ function renderProduct(product) {
     originalPrice: basePrice + 8
   };
 
-  container.innerHTML = `
-    <div class="product-image"
-        style="background-image:url('${enrichedProduct.customImage}')">
-    </div>
+  imageEl.style.backgroundImage = `url('${enrichedProduct.customImage}')`;
+  titleEl.textContent = enrichedProduct.customTitle;
+  descEl.textContent = product.description;
 
-    <div class="product-meta">
-        <span class="product-label">
-          FILE ID: ${product.id.slice(0, 8).toUpperCase()}
-        </span>
-
-        <h1>${enrichedProduct.customTitle}</h1>
-
-        <p class="product-description">
-          ${product.description}
-        </p>
-
-        <div class="product-price">
-          <span class="old">
-            £${enrichedProduct.originalPrice.toFixed(2)}
-          </span>
-
-          <span class="new">
-            £${enrichedProduct.adjustedPrice.toFixed(2)}
-          </span>
-        </div>
-
-        <div class="product-actions">
-          <button class="load" id="addToCartBtn">
-            ADD TO CART
-          </button>
-        </div>
-    </div>
+  priceEl.innerHTML = `
+    <span class="old">£${enrichedProduct.originalPrice.toFixed(2)}</span>
+    <span class="new">£${enrichedProduct.adjustedPrice.toFixed(2)}</span>
   `;
 
-  const button = document.getElementById("addToCartBtn");
-  button.addEventListener("click", () => addToCart(enrichedProduct));
+  buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
 
 (async () => {
 
-  if (!container) {
-    console.error("Missing #product container");
-    return;
-  }
-
   if (!productId) {
-    container.innerHTML = "<p>NO FILE SELECTED</p>";
+    titleEl.textContent = "NO FILE SELECTED";
     return;
   }
 
