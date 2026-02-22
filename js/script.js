@@ -75,8 +75,8 @@ async function fetchProducts() {
         ...product,
         customImage: customImages[index % customImages.length],
         customTitle: customTitles[index % customTitles.length],
-        adjustedPrice: basePrice,
-        originalPrice: basePrice + 8
+        adjustedPrice: product.discountedPrice,
+originalPrice: product.price
       };
     });
 
