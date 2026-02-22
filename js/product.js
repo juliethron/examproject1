@@ -56,6 +56,12 @@ const customDescriptions = [
   "One night. One masked figure. Pure relentless dread."
 ];
 
+function getStablePrice(id) {
+  return 14.99 + (
+    id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 20
+  );
+}
+
 function persistCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -69,7 +75,7 @@ function addToCart(product) {
     cart.push({
       id: product.id,
       customTitle: product.customTitle,
-      finalPrice: product.discountedPrice,   
+      finalPrice: getStablePrice(product.id),
       quantity: 1
     });
   }
@@ -111,10 +117,13 @@ function renderProduct(product) {
   descEl.textContent = customDescriptions[index];
 
   
-  priceEl.innerHTML = `
-    <span class="old">£${product.price.toFixed(2)}</span>
-    <span class="new">£${product.discountedPrice.toFixed(2)}</span>
-  `;
+  const newPrice = getStablePrice(product.id);
+  const oldPrice = newPrice + 10;
+
+priceEl.innerHTML = `
+  <span class="old">£${oldPrice.toFixed(2)}</span>
+  <span class="new">£${newPrice.toFixed(2)}</span>
+`;
 
   buttonEl.addEventListener("click", () => addToCart(enrichedProduct));
 }
