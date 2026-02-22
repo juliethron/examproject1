@@ -56,8 +56,25 @@ function renderProducts(products) {
   gridEl.innerHTML = "";
 
   const usedIndexes = new Set();
+  const remainingProducts = [];
 
   for (const product of products) {
+
+    const index = getStableIndex(product.id);
+
+    if (usedIndexes.has(index)) {
+      remainingProducts.push(product);
+      continue;
+    }
+
+    usedIndexes.add(index);
+
+    renderCard(product, index);
+
+    if (usedIndexes.size >= customTitles.length) return;
+  }
+
+  for (const product of remainingProducts) {
 
     const index = getStableIndex(product.id);
 
@@ -65,29 +82,33 @@ function renderProducts(products) {
 
     usedIndexes.add(index);
 
-    gridEl.innerHTML += `
-      <div class="card">
-        <a href="product.html?id=${product.id}">
-          <div class="poster" style="background-image:url('${customImages[index]}')"></div>
+    renderCard(product, index);
 
-          <div class="card-content">
-            <h3>${customTitles[index]}</h3>
-
-            <div class="price-cart">
-              <div class="price">
-                <span class="old">£${product.price.toFixed(2)}</span>
-                <span class="new">£${product.discountedPrice.toFixed(2)}</span>
-              </div>
-
-              <button class="add">LOAD</button>
-            </div>
-          </div>
-        </a>
-      </div>
-    `;
-
-    if (usedIndexes.size >= customTitles.length) break;
+    if (usedIndexes.size >= customTitles.length) return;
   }
+}
+
+function renderCard(product, index) {
+  gridEl.innerHTML += `
+    <div class="card">
+      <a href="product.html?id=${product.id}">
+        <div class="poster" style="background-image:url('${customImages[index]}')"></div>
+
+        <div class="card-content">
+          <h3>${customTitles[index]}</h3>
+
+          <div class="price-cart">
+            <div class="price">
+              <span class="old">£${product.price.toFixed(2)}</span>
+              <span class="new">£${product.discountedPrice.toFixed(2)}</span>
+            </div>
+
+            <button class="add">LOAD</button>
+          </div>
+        </div>
+      </a>
+    </div>
+  `;
 }
 
 (async () => {
