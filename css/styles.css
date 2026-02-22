@@ -862,3 +862,37 @@ header {
   gap: 12px;
 }
 
+
+.format-selector {
+  margin-top: 12px;
+}
+
+.format-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.format-options button {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  transition: all 0.25s ease;
+}
+
+.format-options button:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.format-options button.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--ink);
+}
