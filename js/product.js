@@ -49,7 +49,6 @@ async function fetchProduct(id) {
     const res = await fetch(`${API_URL}/${id}`);
     const json = await res.json();
     return json.data;
-
   } catch (error) {
     console.error("API ERROR:", error);
     return null;
@@ -79,7 +78,10 @@ function addToCart(product) {
 }
 
 function renderProduct(product) {
-  if (!product) return;
+  if (!product) {
+    titleEl.textContent = "PRODUCT LOAD FAILURE";
+    return;
+  }
 
   const index = Math.floor(Math.random() * customTitles.length);
   const basePrice = generateRetailPrice();
@@ -112,5 +114,4 @@ function renderProduct(product) {
 
   const product = await fetchProduct(productId);
   renderProduct(product);
-
 })();
