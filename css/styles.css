@@ -263,19 +263,16 @@ header {
 
 .price {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
-}
-
-.price .old {
-  text-decoration: line-through;
-  color: var(--muted);
-  opacity: 0.6;
   font-size: 13px;
 }
 
+.price .old {
+  opacity: 0.45;
+}
+
 .price .new {
-  color: var(--ink);
   font-weight: 600;
 }
 
