@@ -57,12 +57,11 @@ function renderProducts(products) {
 
   const usedIndexes = new Set();
 
-  products.forEach(product => {
+  for (const product of products) {
 
     const index = getStableIndex(product.id);
 
-    /* ⭐ SKIP DUPLICATES ⭐ */
-    if (usedIndexes.has(index)) return;
+    if (usedIndexes.has(index)) continue;
 
     usedIndexes.add(index);
 
@@ -86,7 +85,9 @@ function renderProducts(products) {
         </a>
       </div>
     `;
-  });
+
+    if (usedIndexes.size >= customTitles.length) break;
+  }
 }
 
 (async () => {
