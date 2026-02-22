@@ -142,3 +142,43 @@ function renderProduct(product) {
   renderProduct(product);
 
 })();
+
+const carouselEl = document.getElementById("carouselTrack");
+
+if (carouselEl) {
+
+  const featuredMovies = [
+    { title: "THE THING", image: "bilds/thething.jpg" },
+    { title: "HEREDITARY", image: "bilds/hereditary.jpg" },
+    { title: "LONGLEGS", image: "bilds/longlegs.jpg" }
+  ];
+
+  let currentIndex = 0;
+
+  function renderCarousel() {
+
+    carouselEl.innerHTML = "";
+
+    featuredMovies.forEach((movie, index) => {
+
+      carouselEl.innerHTML += `
+        <div class="carousel-slide ${index === currentIndex ? "active" : ""}"
+             style="background-image: url('${movie.image}')">
+
+          <div class="carousel-overlay">
+            <h2>${movie.title}</h2>
+          </div>
+
+        </div>
+      `;
+    });
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % featuredMovies.length;
+    renderCarousel();
+  }
+
+  renderCarousel();
+  setInterval(nextSlide, 3500);
+}
