@@ -40,6 +40,27 @@ function generateRetailPrice() {
   return Math.random() * (24.99 - 9.99) + 9.99;
 }
 
+/* ⭐ NEW — Fake Movie Metadata */
+function generateMovieMeta() {
+  const genres = [
+    "Psychological Horror",
+    "Supernatural Horror",
+    "Sci-Fi Horror",
+    "Slasher",
+    "Cult Classic"
+  ];
+
+  const ratings = ["PG-13", "15", "18", "R"];
+
+  return {
+    genre: genres[Math.floor(Math.random() * genres.length)],
+    runtime: Math.floor(Math.random() * 60) + 80, 
+    year: Math.floor(Math.random() * 30) + 1995,
+    rating: ratings[Math.floor(Math.random() * ratings.length)],
+    stock: Math.floor(Math.random() * 8) + 1
+  };
+}
+
 async function fetchProduct(id) {
   try {
     const res = await fetch(`${API_URL}/${id}`);
@@ -81,15 +102,16 @@ function renderProduct(product) {
   }
 
   const index = Math.floor(Math.random() * customTitles.length);
-
   const basePrice = generateRetailPrice();
+  const meta = generateMovieMeta();  // ⭐ NEW
 
   const enrichedProduct = {
     ...product,
     customTitle: customTitles[index],
     customImage: customImages[index],
     adjustedPrice: basePrice,
-    originalPrice: basePrice + 8
+    originalPrice: basePrice + 8,
+    meta
   };
 
   container.innerHTML = `
@@ -107,6 +129,17 @@ function renderProduct(product) {
         <p class="product-description">
         ${product.description}
         </p>
+
+        <div class="movie-meta">
+          <div><span>GENRE</span> ${meta.genre}</div>
+          <div><span>RUNTIME</span> ${meta.runtime} mins</div>
+          <div><span>RELEASE</span> ${meta.year}</div>
+          <div><span>RATING</span> ${meta.rating}</div>
+        </div>
+
+        <div class="stock-warning">
+          ONLY ${meta.stock} UNITS REMAINING
+        </div>
 
         <div class="product-price">
             <span class="old">
