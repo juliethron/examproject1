@@ -55,9 +55,16 @@ function renderProducts(products) {
 
   gridEl.innerHTML = "";
 
+  const usedIndexes = new Set();
+
   products.forEach(product => {
 
     const index = getStableIndex(product.id);
+
+    /* ⭐ SKIP DUPLICATES ⭐ */
+    if (usedIndexes.has(index)) return;
+
+    usedIndexes.add(index);
 
     gridEl.innerHTML += `
       <div class="card">
