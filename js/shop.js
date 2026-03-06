@@ -61,7 +61,6 @@ function renderProducts(products) {
 
   gridEl.innerHTML = "";
 
-  const usedIndexes = new Set();
   const remainingProducts = [];
 
   for (const product of products) {
