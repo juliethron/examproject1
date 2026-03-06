@@ -942,3 +942,50 @@ a {
   border: 1px solid var(--accent) !important;
   box-shadow: 0 0 0 1px rgba(196,58,47,0.25);
 }
+
+
+
+@media (max-width: 768px) {
+
+  .nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .cta {
+    justify-content: center;
+  }
+
+  .featured {
+    align-items: center;
+  }
+
+  .carousel-track {
+    width: 100%;
+    max-width: 260px;
+    height: 360px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+
+}
