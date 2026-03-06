@@ -274,6 +274,8 @@ a {
 
 .price .old {
   opacity: 0.45;
+  text-decoration: line-through;
+
 }
 
 .price .new {
