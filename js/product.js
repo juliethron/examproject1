@@ -85,16 +85,22 @@ function addToCart(product) {
 
 async function fetchProduct(id) {
   try {
-    const res = await fetch(`${API_URL}/${id}`);
+    const res = await fetch(API_URL);
     const json = await res.json();
-    return json.data;
+    const products = json.data;
+
+    const index = products.findIndex(p => p.id === id);
+
+    return {
+      product: products[index],
+      index: index
+    };
 
   } catch (error) {
     console.error("Failed to load product", error);
     return null;
   }
 }
-
 function renderProducts(products) {
 
   if (!gridEl) return;
