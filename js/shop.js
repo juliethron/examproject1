@@ -60,11 +60,10 @@ function renderProducts(products) {
 
   gridEl.innerHTML = "";
 
-  products.slice(0, customTitles.length).forEach(product => {
+  const items = products.slice(0, customTitles.length);
 
-    const index = getStableIndex(product.id);
+  items.forEach((product, index) => {
     renderCard(product, index);
-
   });
 
 }
