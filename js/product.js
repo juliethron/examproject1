@@ -95,12 +95,19 @@ async function fetchProduct(id) {
   }
 }
 
-function renderProduct(product) {
+function renderProducts(products) {
 
-  if (!product) {
-    titleEl.textContent = "PRODUCT FILE CORRUPTED";
-    return;
-  }
+  if (!gridEl) return;
+
+  gridEl.innerHTML = "";
+
+  products.slice(0, customTitles.length).forEach(product => {
+
+    const index = getStableIndex(product.id);
+    renderCard(product, index);
+
+  });
+}
 
   const index = Math.abs(
     product.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
