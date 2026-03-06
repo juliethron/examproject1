@@ -48,7 +48,6 @@ async function fetchProducts() {
     const res = await fetch(API_URL);
     const json = await res.json();
     return json.data;
-
   } catch (error) {
     console.error("Failed to load products", error);
     return [];
@@ -61,36 +60,13 @@ function renderProducts(products) {
 
   gridEl.innerHTML = "";
 
-  const remainingProducts = [];
-
-  for (const product of products) {
+  products.slice(0, customTitles.length).forEach(product => {
 
     const index = getStableIndex(product.id);
-
-    if (usedIndexes.has(index)) {
-      remainingProducts.push(product);
-      continue;
-    }
-
-    usedIndexes.add(index);
-
     renderCard(product, index);
 
-    if (usedIndexes.size >= customTitles.length) return;
-  }
+  });
 
-  for (const product of remainingProducts) {
-
-    const index = getStableIndex(product.id);
-
-    if (usedIndexes.has(index)) continue;
-
-    usedIndexes.add(index);
-
-    renderCard(product, index);
-
-    if (usedIndexes.size >= customTitles.length) return;
-  }
 }
 
 function renderCard(product, index) {
