@@ -282,6 +282,10 @@ a {
   font-weight: 600;
 }
 
+.old {
+  text-decoration: line-through;
+  opacity: 0.45;
+}
 
 .add {
     background: rgba(196,58,47,0.2);
